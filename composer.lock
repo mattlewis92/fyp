@@ -3,8 +3,91 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "3572ef5486e01be41b96a1fdace500a6",
+    "hash": "c2760cec1995e2e7666b8086b9e4ecbc",
     "packages": [
+        {
+            "name": "j7mbo/twitter-api-php",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/J7mbo/twitter-api-php.git",
+                "reference": "ab76f1c1e6bf83f0a257216cbaf9932b7cc19a3f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/J7mbo/twitter-api-php/zipball/ab76f1c1e6bf83f0a257216cbaf9932b7cc19a3f",
+                "reference": "ab76f1c1e6bf83f0a257216cbaf9932b7cc19a3f",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "TwitterAPIExchange.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GNU Public License"
+            ],
+            "authors": [
+                {
+                    "name": "James Mallison",
+                    "homepage": "https://github.com/j7mbo/twitter-api-php"
+                }
+            ],
+            "description": "Simple PHP Wrapper for Twitter API v1.1 calls",
+            "homepage": "https://github.com/j7mbo/twitter-api-php",
+            "keywords": [
+                "api",
+                "php",
+                "twitter"
+            ],
+            "time": "2013-10-03 10:04:59"
+        },
+        {
+            "name": "linkedinapi/linkedin",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ashwinks/PHP-LinkedIn-SDK.git",
+                "reference": "eb23161b9f503b36b442323e3fe23587ddbe6215"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ashwinks/PHP-LinkedIn-SDK/zipball/eb23161b9f503b36b442323e3fe23587ddbe6215",
+                "reference": "eb23161b9f503b36b442323e3fe23587ddbe6215",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "LinkedIn": "."
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ashwin Surajbali",
+                    "email": "ashwin@redinkdesign.net",
+                    "homepage": "http://www.redinkdesign.co"
+                }
+            ],
+            "description": "PHP LinkedIn SDK",
+            "homepage": "https://github.com/redinkdesign/PHP-LinkedIn-SDK",
+            "keywords": [
+                "api",
+                "api client",
+                "linkedin",
+                "rest"
+            ],
+            "time": "2013-11-18 17:48:15"
+        },
         {
             "name": "slim/slim",
             "version": "2.4.0",
@@ -59,9 +142,9 @@
 
     ],
     "minimum-stability": "stable",
-    "stability-flags": [
-
-    ],
+    "stability-flags": {
+        "j7mbo/twitter-api-php": 20
+    },
     "platform": [
 
     ],

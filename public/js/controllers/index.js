@@ -100,7 +100,7 @@ angular.module('userData.controllers', []).
           }) - 1;
 
           $http
-            .get('/link/twitter?screen_name=' + item.link.replace('https://twitter.com/', ''), {cache: $angularCacheFactory.get('defaultCache')})
+            .get('/api/social/twitter?screen_name=' + item.link.replace('https://twitter.com/', ''), {cache: $angularCacheFactory.get('defaultCache')})
             .success(function(profile) {
 
               var keywords = [];
@@ -144,7 +144,7 @@ angular.module('userData.controllers', []).
           }) - 1;
 
           $http
-            .get('/link/linkedin?profile_url=' + item.link, {cache: $angularCacheFactory.get('defaultCache')})
+            .get('/api/social/linkedin?profile_url=' + item.link, {cache: $angularCacheFactory.get('defaultCache')})
             .success(function(profile) {
 
               if (profile.firstName == 'private') {
