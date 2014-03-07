@@ -3,7 +3,9 @@
         "slim/slim": "2.*",
         "linkedinapi/linkedin": "1.0.1",
         "j7mbo/twitter-api-php": "dev-master",
-        "doctrine/mongodb-odm": "1.0.x-dev"
+        "doctrine/mongodb-odm": "1.0.x-dev",
+        "doctrine/dbal": "2.5.*@dev",
+        "everyman/neo4jphp":"dev-master"
     },
     "autoload": {
         "psr-0": {

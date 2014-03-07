@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "b830301aaa98439981fd1d0dcb0ae010",
+    "hash": "51803a07836ba651f97f2b9ac6fce74c",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -295,6 +295,77 @@
             "time": "2013-09-07 10:20:34"
         },
         {
+            "name": "doctrine/dbal",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/doctrine/dbal.git",
+                "reference": "c61361d8fcf65a977d8610ba78eb542a1d2f44b4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/c61361d8fcf65a977d8610ba78eb542a1d2f44b4",
+                "reference": "c61361d8fcf65a977d8610ba78eb542a1d2f44b4",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/common": "2.4.*",
+                "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "3.7.*",
+                "symfony/console": "2.*"
+            },
+            "suggest": {
+                "symfony/console": "Allows use of the command line interface"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.5.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Doctrine\\DBAL\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jonathan Wage",
+                    "email": "jonwage@gmail.com",
+                    "homepage": "http://www.jwage.com/",
+                    "role": "Creator"
+                },
+                {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com",
+                    "homepage": "http://www.instaclick.com"
+                },
+                {
+                    "name": "Roman Borschel",
+                    "email": "roman@code-factory.org"
+                },
+                {
+                    "name": "Benjamin Eberlei",
+                    "email": "kontakt@beberlei.de"
+                }
+            ],
+            "description": "Database Abstraction Layer",
+            "homepage": "http://www.doctrine-project.org",
+            "keywords": [
+                "database",
+                "dbal",
+                "persistence",
+                "queryobject"
+            ],
+            "time": "2014-03-06 06:53:43"
+        },
+        {
             "name": "doctrine/inflector",
             "version": "v1.0",
             "source": {
@@ -488,12 +559,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/mongodb-odm.git",
-                "reference": "3743acb256eb91a377d525cd2ed03a6b5e7ddf10"
+                "reference": "e99d818b4224b35fab38abc230696d9282a1ecea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/mongodb-odm/zipball/3743acb256eb91a377d525cd2ed03a6b5e7ddf10",
-                "reference": "3743acb256eb91a377d525cd2ed03a6b5e7ddf10",
+                "url": "https://api.github.com/repos/doctrine/mongodb-odm/zipball/e99d818b4224b35fab38abc230696d9282a1ecea",
+                "reference": "e99d818b4224b35fab38abc230696d9282a1ecea",
                 "shasum": ""
             },
             "require": {
@@ -534,7 +605,7 @@
                     "homepage": "http://avalanche123.com"
                 },
                 {
-                    "name": "Jonathan H. Wage",
+                    "name": "Jonathan Wage",
                     "email": "jonwage@gmail.com",
                     "homepage": "http://www.jwage.com/",
                     "role": "Creator"
@@ -558,7 +629,56 @@
                 "odm",
                 "persistence"
             ],
-            "time": "2014-02-24 20:26:49"
+            "time": "2014-02-27 04:04:39"
+        },
+        {
+            "name": "everyman/neo4jphp",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jadell/neo4jphp.git",
+                "reference": "d63b62a7c4df8f0d3e4468db2866abc8aaa84063"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jadell/neo4jphp/zipball/d63b62a7c4df8f0d3e4468db2866abc8aaa84063",
+                "reference": "d63b62a7c4df8f0d3e4468db2866abc8aaa84063",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phing/phing": "2.6.*",
+                "phpunit/phpunit": "3.7.*",
+                "squizlabs/php_codesniffer": "1.5.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Everyman\\Neo4j": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Josh Adell",
+                    "email": "josh.adell@gmail.com",
+                    "homepage": "http://joshadell.com"
+                }
+            ],
+            "description": "Wrapper for the Neo4j graph database REST interface",
+            "homepage": "http://github.com/jadell/neo4jphp/wiki",
+            "keywords": [
+                "database",
+                "graph",
+                "neo4j"
+            ],
+            "time": "2014-03-01 22:57:01"
         },
         {
             "name": "j7mbo/twitter-api-php",
@@ -754,7 +874,9 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "j7mbo/twitter-api-php": 20,
-        "doctrine/mongodb-odm": 20
+        "doctrine/mongodb-odm": 20,
+        "doctrine/dbal": 20,
+        "everyman/neo4jphp": 20
     },
     "platform": [
 

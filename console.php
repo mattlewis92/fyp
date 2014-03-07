@@ -14,7 +14,7 @@ foreach ($helpers as $name => $helper) {
     $helperSet->set($helper, $name);
 }
 
-$cli = new \Symfony\Component\Console\Application('Doctrine ODM MongoDB Command Line Interface', Doctrine\ODM\MongoDB\Version::VERSION);
+$cli = new \Symfony\Component\Console\Application('FYP Command Line Interface', Doctrine\ODM\MongoDB\Version::VERSION);
 $cli->setCatchExceptions(true);
 $cli->setHelperSet($helperSet);
 $cli->addCommands(array(
@@ -29,5 +29,6 @@ $cli->addCommands(array(
     new \Doctrine\ODM\MongoDB\Tools\Console\Command\Schema\DropCommand(),
     new \Command\ImportLexicon(),
     new \Command\Test(),
+    new \Command\ImportWordnet()
 ));
 $cli->run();
