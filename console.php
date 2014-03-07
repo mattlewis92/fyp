@@ -2,7 +2,7 @@
 
 require 'vendor/autoload.php';
 
-$app = new \API\App();
+$app = new \FYP\API\App();
 
 $helpers = array(
     'dm' => new Doctrine\ODM\MongoDB\Tools\Console\Helper\DocumentManagerHelper($app->getDoctrineManager()),
@@ -27,8 +27,24 @@ $cli->addCommands(array(
     new \Doctrine\ODM\MongoDB\Tools\Console\Command\Schema\CreateCommand(),
     new \Doctrine\ODM\MongoDB\Tools\Console\Command\Schema\UpdateCommand(),
     new \Doctrine\ODM\MongoDB\Tools\Console\Command\Schema\DropCommand(),
-    new \Command\ImportLexicon(),
-    new \Command\Test(),
-    new \Command\ImportWordnet()
 ));
+
+foreach(array('Command', 'Worker') as $directory) {
+    if ($handle = opendir(__DIR__ . '/src/FYP/' . $directory)) {
+
+        while (false !== ($entry = readdir($handle))) {
+            if (!in_array($entry, array('.', '..'))) {
+                $class = '\FYP\\' . $directory . '\\' . str_ireplace('.php', '', $entry);
+                $cli->add(new $class);
+            }
+        }
+
+        closedir($handle);
+    } else {
+        exit('Could not read ' . $directory . ' directory');
+    }
+}
+
+
+
 $cli->run();

@@ -1,6 +1,6 @@
 <?php
 
-namespace API;
+namespace FYP\API;
 
 use Doctrine\MongoDB\Connection;
 use Doctrine\ODM\MongoDB\Configuration;
@@ -115,12 +115,12 @@ class App {
         $connection = new Connection();
 
         $config = new Configuration();
-        $config->setProxyDir(__DIR__ . '/Database/Proxies');
-        $config->setProxyNamespace('API\Database\Proxies');
-        $config->setHydratorDir(__DIR__ . '/Database/Hydrators');
-        $config->setHydratorNamespace('API\Database\Hydrators');
+        $config->setProxyDir(__DIR__ . '/../Database/Proxies');
+        $config->setProxyNamespace('FYP\Database\Proxies');
+        $config->setHydratorDir(__DIR__ . '/../Database/Hydrators');
+        $config->setHydratorNamespace('FYP\Database\Hydrators');
         $config->setDefaultDB('fyp');
-        $config->setMetadataDriverImpl(AnnotationDriver::create(__DIR__ . '/Database/Documents'));
+        $config->setMetadataDriverImpl(AnnotationDriver::create(__DIR__ . '/../Database/Documents'));
 
         AnnotationDriver::registerAnnotationClasses();
 

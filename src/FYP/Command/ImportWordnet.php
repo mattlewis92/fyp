@@ -1,21 +1,21 @@
 <?php
 
-namespace Command;
+namespace FYP\Command;
 
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-use API\Utility\NLP\KeywordExtractor;
-use API\Database\Documents\Word;
+use FYP\Utility\NLP\KeywordExtractor;
+use FYP\Database\Documents\Word;
 
 class ImportWordnet extends Command {
 
     const CHUNK_SIZE = 10000;
 
     private $mysql;
+
+    private $neo4j;
 
     protected function configure() {
         $this
@@ -31,13 +31,21 @@ class ImportWordnet extends Command {
             'driver' => 'pdo_mysql'
         );
         $this->mysql = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
+
+        $this->neo4j = new \Everyman\Neo4j\Client('localhost', 7474);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output) {
 
         $dm = $this->getHelperSet()->get('dm')->getDocumentManager();
 
+        $progress = $this->getHelperSet()->get('progress');
+
+        $progress->setRedrawFrequency(100);
+
         $totalWords = $this->mysql->executeQuery('SELECT COUNT(*) AS total FROM words')->fetch()['total'];
+
+        $progress->start($output, $totalWords);
 
         for ($i = 0; $i < $totalWords; $i += self::CHUNK_SIZE) {
 
@@ -54,37 +62,74 @@ class ImportWordnet extends Command {
                 ->fetchAll();
 
             foreach($words as $word) {
-                $mongoId = $this->getMongoWordId($word['lemma'], $word['pos']);
-                $synonymIds = $this->getSynonymWordIds($word['lemma'], $word['pos']);
-                print_r($synonymIds);
+                $word = $this->getWord($word['lemma'], $word['pos']);
+                $synonymWords = $this->getSynonymWords($word->getLemma(), $word->getPos());
+                $wordNode = $this->neo4j->getNode($word->getNeo4jId());
+
+                $batch = new \Everyman\Neo4j\Batch($this->neo4j);
+
+                foreach($synonymWords as $synonymWord) {
+                    $synonymWordNode = $this->neo4j->getNode($synonymWord->getNeo4jId());
+                    $relationshipExists = false;
+                    foreach($wordNode->getRelationships() as $relationship) {
+                        if ($relationship->getEndNode()->getId() == $synonymWordNode->getId() || $relationship->getStartNode()->getId() == $synonymWordNode->getId()) {
+                            $relationshipExists = true;
+                            break;
+                        }
+                    }
+
+                    if (!$relationshipExists) {
+                        $batch->save($synonymWordNode->relateTo($wordNode, 'IS_SYNONYM_OF'));
+                    }
+                }
+
+                if (count($batch->getOperations()) > 0) {
+                    $batch->commit();
+                }
+
+                $progress->advance();
+
             }
         }
 
 
     }
 
-    private function getMongoWordId($lemma, $pos) {
+    private function getWord($lemma, $pos) {
 
         $dm = $this->getHelperSet()->get('dm')->getDocumentManager();
 
         $result = $dm
-            ->getRepository('\API\Database\Documents\Word')
+            ->getRepository('\FYP\Database\Documents\Word')
             ->findOneBy(array('lemma' => $lemma, 'pos' => $pos));
 
         if (empty($result)) {
-            $word = new \API\Database\Documents\Word();
-            $word = $word->setLemma($lemma)->setPos($pos)->setIsWordnet(true)->setIsWikipedia(false);
+            $node = $this
+                ->neo4j
+                ->makeNode()
+                ->save();
+
+            $word = new \FYP\Database\Documents\Word();
+            $word = $word
+                ->setLemma($lemma)
+                ->setPos($pos)
+                ->setIsWordnet(true)
+                ->setIsWikipedia(false)
+                ->setNeo4jId($node->getId());
             $dm->persist($word);
             $dm->flush();
+            $node->setProperty('mongo_id', $word->getId())->save();
             $dm->clear();
-            return $word->getId();
+            return $word;
+        } else {
+            $dm->clear();
         }
 
-        return $result->getId();
+        return $result;
 
     }
 
-    private function getSynonymWordIds($lemma, $pos) {
+    private function getSynonymWords($lemma, $pos) {
 
         $words = $this->mysql
             ->createQueryBuilder()
@@ -101,13 +146,13 @@ class ImportWordnet extends Command {
             ->execute()
             ->fetchAll();
 
-        $wordIds = array();
+        $result = array();
 
         foreach($words as $word) {
-            $wordIds[] = $this->getMongoWordId($word['lemma'], $word['pos']);
+            $result[] = $this->getWord($word['lemma'], $word['pos']);
         }
 
-        return $wordIds;
+        return $result;
 
     }
 

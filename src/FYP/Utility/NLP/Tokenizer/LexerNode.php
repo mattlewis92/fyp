@@ -1,6 +1,6 @@
 <?php
 
-namespace API\Utility\NLP\Tokenizer;
+namespace FYP\Utility\NLP\Tokenizer;
 
 
 class LexerNode {

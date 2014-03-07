@@ -1,6 +1,6 @@
 <?php
 
-namespace API\Database\Documents;
+namespace FYP\Database\Documents;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 

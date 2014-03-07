@@ -1,11 +1,14 @@
 <?php
 
-namespace API\Database\Documents;
+namespace FYP\Database\Documents;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 /**
  * @ODM\Document(collection="word")
+ * @ODM\Indexes({
+ *   @ODM\Index(keys={"lemma"="asc", "pos"="asc"})
+ * })
  */
 class Word
 {
@@ -23,6 +26,9 @@ class Word
 
     /** @ODM\String(name="is_wikipedia") */
     private $isWikipedia;
+
+    /** @ODM\Int(name="neo4j_id") */
+    private $neo4jId;
 
     /**
      * Get id
@@ -120,5 +126,27 @@ class Word
     public function getIsWikipedia()
     {
         return $this->isWikipedia;
+    }
+
+    /**
+     * Set neo4jId
+     *
+     * @param integer $neo4jId
+     * @return self
+     */
+    public function setNeo4jId($neo4jId)
+    {
+        $this->neo4jId = $neo4jId;
+        return $this;
+    }
+
+    /**
+     * Get neo4jId
+     *
+     * @return integer $neo4jId
+     */
+    public function getNeo4jId()
+    {
+        return $this->neo4jId;
     }
 }

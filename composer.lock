@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "51803a07836ba651f97f2b9ac6fce74c",
+    "hash": "c566ec1cc1897cddb99e0a5ce9c421ca",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -296,35 +296,30 @@
         },
         {
             "name": "doctrine/dbal",
-            "version": "dev-master",
+            "version": "v2.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "c61361d8fcf65a977d8610ba78eb542a1d2f44b4"
+                "reference": "fec965d330c958e175c39e61c3f6751955af32d0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/c61361d8fcf65a977d8610ba78eb542a1d2f44b4",
-                "reference": "c61361d8fcf65a977d8610ba78eb542a1d2f44b4",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/fec965d330c958e175c39e61c3f6751955af32d0",
+                "reference": "fec965d330c958e175c39e61c3f6751955af32d0",
                 "shasum": ""
             },
             "require": {
-                "doctrine/common": "2.4.*",
+                "doctrine/common": "~2.4",
                 "php": ">=5.3.2"
             },
             "require-dev": {
                 "phpunit/phpunit": "3.7.*",
-                "symfony/console": "2.*"
+                "symfony/console": "~2.0"
             },
             "suggest": {
                 "symfony/console": "Allows use of the command line interface"
             },
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.5.x-dev"
-                }
-            },
             "autoload": {
                 "psr-0": {
                     "Doctrine\\DBAL\\": "lib/"
@@ -363,7 +358,7 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2014-03-06 06:53:43"
+            "time": "2014-01-01 16:43:57"
         },
         {
             "name": "doctrine/inflector",
@@ -721,16 +716,16 @@
         },
         {
             "name": "linkedinapi/linkedin",
-            "version": "1.0.1",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ashwinks/PHP-LinkedIn-SDK.git",
-                "reference": "eb23161b9f503b36b442323e3fe23587ddbe6215"
+                "reference": "77642ecf0c2536e45184a97637061e1ce62dc4ae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ashwinks/PHP-LinkedIn-SDK/zipball/eb23161b9f503b36b442323e3fe23587ddbe6215",
-                "reference": "eb23161b9f503b36b442323e3fe23587ddbe6215",
+                "url": "https://api.github.com/repos/ashwinks/PHP-LinkedIn-SDK/zipball/77642ecf0c2536e45184a97637061e1ce62dc4ae",
+                "reference": "77642ecf0c2536e45184a97637061e1ce62dc4ae",
                 "shasum": ""
             },
             "require": {
@@ -754,14 +749,56 @@
                 }
             ],
             "description": "PHP LinkedIn SDK",
-            "homepage": "https://github.com/redinkdesign/PHP-LinkedIn-SDK",
+            "homepage": "https://github.com/ashwinks/PHP-LinkedIn-SDK",
             "keywords": [
                 "api",
                 "api client",
                 "linkedin",
                 "rest"
             ],
-            "time": "2013-11-18 17:48:15"
+            "time": "2014-01-16 01:13:03"
+        },
+        {
+            "name": "pda/pheanstalk",
+            "version": "v2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pda/pheanstalk.git",
+                "reference": "ab006cf9330fb5d3799f30a5d9841b85edb40a0f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pda/pheanstalk/zipball/ab006cf9330fb5d3799f30a5d9841b85edb40a0f",
+                "reference": "ab006cf9330fb5d3799f30a5d9841b85edb40a0f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Pheanstalk": "classes/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Paul Annesley",
+                    "email": "paul@annesley.cc",
+                    "homepage": "http://paul.annesley.cc/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "PHP client for beanstalkd queue",
+            "homepage": "https://github.com/pda/pheanstalk",
+            "keywords": [
+                "beanstalkd"
+            ],
+            "time": "2013-04-03 09:15:34"
         },
         {
             "name": "slim/slim",
@@ -875,7 +912,6 @@
     "stability-flags": {
         "j7mbo/twitter-api-php": 20,
         "doctrine/mongodb-odm": 20,
-        "doctrine/dbal": 20,
         "everyman/neo4jphp": 20
     },
     "platform": [

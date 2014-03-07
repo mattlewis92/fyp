@@ -1,8 +1,8 @@
 <?php
 
-namespace API\Utility\NLP;
+namespace FYP\Utility\NLP;
 
-use \API\Database\Documents\Lexicon;
+use \FYP\Database\Documents\Lexicon;
 
 
 class POSTagger {
@@ -91,7 +91,7 @@ class POSTagger {
 
     private function lookup($word) {
 
-        $query = $this->dm->getRepository('\API\Database\Documents\Lexicon');
+        $query = $this->dm->getRepository('\FYP\Database\Documents\Lexicon');
         $result = $query->findOneBy(array('phrase' => $word));
         if (empty($result)) {
             $result = $query->findOneBy(array('phrase' => strtolower($word)));

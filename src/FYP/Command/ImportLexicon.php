@@ -1,6 +1,6 @@
 <?php
 
-namespace Command;
+namespace FYP\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -36,19 +36,19 @@ class ImportLexicon extends Command {
 
         $dm = $this->getHelperSet()->get('dm')->getDocumentManager();
 
-        $dm->createQueryBuilder('\API\Database\Documents\Lexicon')
+        $dm->createQueryBuilder('\FYP\Database\Documents\Lexicon')
             ->remove()
             ->getQuery()
             ->execute();
 
         foreach($lexicon as $phrase => $tags) {
 
-            $document = new \API\Database\Documents\Lexicon();
+            $document = new \FYP\Database\Documents\Lexicon();
             $document->setPhrase($phrase)->setTags($tags);
             $dm->persist($document);
 
             if (strtolower($phrase) != $phrase) { //add the lower case version as well as mongo indexes can't be queries by case
-                $document = new \API\Database\Documents\Lexicon();
+                $document = new \FYP\Database\Documents\Lexicon();
                 $document->setPhrase($phrase)->setTags($tags);
                 $dm->persist($document);
             }

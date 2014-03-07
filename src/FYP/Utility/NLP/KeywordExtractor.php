@@ -1,9 +1,9 @@
 <?php
 
-namespace API\Utility\NLP;
+namespace FYP\Utility\NLP;
 
-use API\Utility\NLP\Tokenizer\Lexer;
-use API\Utility\NLP\POSTagger;
+use FYP\Utility\NLP\Tokenizer\Lexer;
+use FYP\Utility\NLP\POSTagger;
 use Doctrine\Common\Inflector\Inflector;
 
 class KeywordExtractor {
