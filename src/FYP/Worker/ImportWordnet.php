@@ -19,8 +19,7 @@ class ImportWordnet extends BaseWorker {
         $connectionParams = \FYP\APP::getDI()['config']->get('wordnet_db');
         $this->mysql = DoctrineDriverManager::getConnection($connectionParams, $config);
 
-        $neo4jHost = \FYP\APP::getDI()['config']->get('neo4j')['host'];
-        $this->neo4j = new \Everyman\Neo4j\Client($neo4jHost);
+        $this->neo4j = \FYP\APP::getDI()['neo4j'];
     }
 
     protected function doJob(array $data = array()) {

@@ -48,6 +48,11 @@ class App {
             return DocumentManager::create($connection, $doctrineConfig);
         };
 
+        $di['neo4j'] = function($c) {
+            $config = $c['config']->get('neo4j');
+            return new \Everyman\Neo4j\Client($config['host']);
+        };
+
         self::$di = $di;
     }
 

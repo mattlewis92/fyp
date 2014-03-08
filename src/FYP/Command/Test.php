@@ -9,6 +9,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 use FYP\Utility\NLP\KeywordExtractor;
+use FYP\Utility\NLP\Synonym;
 
 class Test extends Command {
 
@@ -24,7 +25,10 @@ class Test extends Command {
         $dm = $this->getHelperSet()->get('dm')->getDocumentManager();
 
         $extractor = new KeywordExtractor($dm);
-        print_r($extractor->extract('There are 2 keywords.'));
+
+        $synonym = new Synonym();
+        $result = $synonym->getSimilarityScore('animal', 'n', 'human', 'n');
+        var_dump($result);
 
     }
 
