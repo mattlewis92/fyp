@@ -2,7 +2,12 @@
 
 namespace FYP\Worker;
 
-class ImportWordnet extends \FYP\Utility\BaseWorker {
+use \Doctrine\DBAL\Configuration as DoctrineConfig;
+use \Doctrine\DBAL\DriverManager as DoctrineDriverManager;
+use \FYP\Utility\BaseWorker;
+
+
+class ImportWordnet extends BaseWorker {
 
     protected function configure() {
         $this
@@ -10,16 +15,12 @@ class ImportWordnet extends \FYP\Utility\BaseWorker {
             ->setDescription('Imports the entire wordnet database and plots all synonyms in a graph database.')
         ;
 
-        $config = new \Doctrine\DBAL\Configuration();
-        $connectionParams = array(
-            'dbname' => 'wordnet',
-            'user' => 'root',
-            'host' => 'localhost',
-            'driver' => 'pdo_mysql'
-        );
-        $this->mysql = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
+        $config = new DoctrineConfig();
+        $connectionParams = \FYP\APP::getDI()['config']->get('wordnet_db');
+        $this->mysql = DoctrineDriverManager::getConnection($connectionParams, $config);
 
-        $this->neo4j = new \Everyman\Neo4j\Client('localhost', 7474);
+        $neo4jHost = \FYP\APP::getDI()['config']->get('neo4j')['host'];
+        $this->neo4j = new \Everyman\Neo4j\Client($neo4jHost);
     }
 
     protected function doJob(array $data = array()) {

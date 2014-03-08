@@ -2,10 +2,10 @@
 
 require 'vendor/autoload.php';
 
-$app = new \FYP\API\App();
+$doctrineManager = \FYP\App::getDI()['doctrineManager'];
 
 $helpers = array(
-    'dm' => new Doctrine\ODM\MongoDB\Tools\Console\Helper\DocumentManagerHelper($app->getDoctrineManager()),
+    'dm' => new Doctrine\ODM\MongoDB\Tools\Console\Helper\DocumentManagerHelper($doctrineManager),
     'progress' => new Symfony\Component\Console\Helper\ProgressHelper()
 );
 

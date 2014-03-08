@@ -19,12 +19,7 @@ class ProduceWordnetJobs extends Command {
         ;
 
         $config = new \Doctrine\DBAL\Configuration();
-        $connectionParams = array(
-            'dbname' => 'wordnet',
-            'user' => 'root',
-            'host' => 'localhost',
-            'driver' => 'pdo_mysql'
-        );
+        $connectionParams = \FYP\APP::getDI()['config']->get('wordnet_db');
         $this->mysql = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
 
         $this->queue = new \FYP\Utility\Queue();

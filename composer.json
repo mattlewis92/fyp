@@ -6,7 +6,8 @@
         "doctrine/mongodb-odm": "1.0.x-dev",
         "doctrine/dbal": "2.4.*",
         "everyman/neo4jphp":"dev-master",
-        "pda/pheanstalk": "2.1.*"
+        "pda/pheanstalk": "2.1.*",
+        "pimple/pimple": "2.0.*"
     },
     "autoload": {
         "psr-0": {
