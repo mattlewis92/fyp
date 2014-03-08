@@ -9,7 +9,7 @@ class Queue extends \Pheanstalk_Pheanstalk {
     }
 
     public function addJob($tube, $data) {
-        parent::useTube(str_replace(':', '-', $tube))->put(json_encode($data));
+        parent::useTube(str_replace(':', '-', $tube))->put(json_encode($data), parent::DEFAULT_PRIORITY, parent::DEFAULT_DELAY, 3600);
     }
 
 } 

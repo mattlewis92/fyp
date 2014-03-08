@@ -10,6 +10,8 @@ abstract class BaseWorker extends Command {
 
     private $queue;
 
+    private $currentJob;
+
     public function __construct($name = null) {
         $this->queue = new \FYP\Utility\Queue();
         parent::__construct($name);
@@ -30,19 +32,23 @@ abstract class BaseWorker extends Command {
                 ->watch($tube)
                 ->reserve();
 
+            $this->currentJob = $job;
+
             $output->writeln('Received job: ' . $job->getId());
 
             $result = $this->doJob(json_decode($job->getData(), true));
 
-            try {
-                $this->queue->delete($job); //sometimes this throws an error
-            } catch (\Exception $e) {}
+            $this->queue->delete($job);
 
+            $this->currentJob = null;
 
-
-            $output->writeln('Job: ' . $job->getId() , ' completed. Message: ' . $result);
+            $output->writeln('Job: ' . $job->getId() . ' completed. Message: ' . $result);
         }
 
+    }
+
+    protected function touchCurrentJob() {
+        $this->queue->touch($this->currentJob);
     }
 
     abstract protected function doJob(array $data = array());

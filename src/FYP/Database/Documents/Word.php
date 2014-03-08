@@ -6,9 +6,6 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 /**
  * @ODM\Document(collection="word")
- * @ODM\Indexes({
- *   @ODM\Index(keys={"lemma"="asc", "pos"="asc"})
- * })
  */
 class Word
 {
@@ -18,11 +15,8 @@ class Word
     /** @ODM\String @ODM\Index */
     private $lemma;
 
-    /** @ODM\String @ODM\Index */
-    private $pos;
-
-    /** @ODM\String(name="is_wordnet") */
-    private $isWordnet;
+    /** @ODM\String(name="is_thesaurus") */
+    private $isThesaurus;
 
     /** @ODM\String(name="is_wikipedia") */
     private $isWikipedia;
@@ -48,7 +42,7 @@ class Word
      */
     public function setLemma($lemma)
     {
-        $this->lemma = $lemma;
+        $this->lemma = strtolower($lemma);
         return $this;
     }
 
@@ -63,47 +57,25 @@ class Word
     }
 
     /**
-     * Set pos
+     * Set isThesaurus
      *
-     * @param string $pos
+     * @param string $isThesaurus
      * @return self
      */
-    public function setPos($pos)
+    public function setIsThesaurus($isThesaurus)
     {
-        $this->pos = $pos;
+        $this->isThesaurus = $isThesaurus;
         return $this;
     }
 
     /**
-     * Get pos
+     * Get isThesaurus
      *
-     * @return string $pos
+     * @return string $isThesaurus
      */
-    public function getPos()
+    public function getIsThesaurus()
     {
-        return $this->pos;
-    }
-
-    /**
-     * Set isWordnet
-     *
-     * @param string $isWordnet
-     * @return self
-     */
-    public function setIsWordnet($isWordnet)
-    {
-        $this->isWordnet = $isWordnet;
-        return $this;
-    }
-
-    /**
-     * Get isWordnet
-     *
-     * @return string $isWordnet
-     */
-    public function getIsWordnet()
-    {
-        return $this->isWordnet;
+        return $this->isThesaurus;
     }
 
     /**
@@ -131,7 +103,7 @@ class Word
     /**
      * Set neo4jId
      *
-     * @param integer $neo4jId
+     * @param int $neo4jId
      * @return self
      */
     public function setNeo4jId($neo4jId)
@@ -143,7 +115,7 @@ class Word
     /**
      * Get neo4jId
      *
-     * @return integer $neo4jId
+     * @return int $neo4jId
      */
     public function getNeo4jId()
     {

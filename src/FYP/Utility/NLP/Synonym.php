@@ -6,20 +6,20 @@ use FYP\App;
 
 class Synonym {
 
-    const MAX_DEPTH = 11;
+    const MAX_DEPTH = 5;
 
-    public function getSimilarityScore($lemma1, $pos1, $lemma2, $pos2) {
+    public function getSimilarityScore($lemma1, $lemma2) {
         $neo4j = App::getDI()['neo4j'];
 
         $lemma1 = strtolower($lemma1);
         $lemma2 = strtolower($lemma2);
 
-        if ($lemma1 == $lemma2 && $pos1 == $pos2) { //save some computation
+        if ($lemma1 == $lemma2) { //save some computation
             return 1.0;
         }
 
-        $word1 = $this->getWord($lemma1, $pos1);
-        $word2 = $this->getWord($lemma2, $pos2);
+        $word1 = $this->getWord($lemma1);
+        $word2 = $this->getWord($lemma2);
 
         if (empty($word1) || empty($word2)) return -1.0; //unknown words
 
@@ -40,10 +40,10 @@ class Synonym {
 
     }
 
-    private function getWord($lemma, $pos) {
+    private function getWord($lemma) {
         return App::getDI()['doctrineManager']
             ->getRepository('\FYP\Database\Documents\Word')
-            ->findOneBy(array('lemma' => $lemma, 'pos' => $pos));
+            ->findOneBy(array('lemma' => $lemma));
     }
 
 } 

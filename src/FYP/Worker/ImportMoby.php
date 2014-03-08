@@ -7,16 +7,16 @@ use \Doctrine\DBAL\DriverManager as DoctrineDriverManager;
 use \FYP\Utility\BaseWorker;
 
 
-class ImportWordnet extends BaseWorker {
+class ImportMoby extends BaseWorker {
 
     protected function configure() {
         $this
-            ->setName('import:wordnet')
-            ->setDescription('Imports the entire wordnet database and plots all synonyms in a graph database.')
+            ->setName('import:moby')
+            ->setDescription('Imports the entire moby database and plots all synonyms in a graph database.')
         ;
 
         $config = new DoctrineConfig();
-        $connectionParams = \FYP\APP::getDI()['config']->get('wordnet_db');
+        $connectionParams = \FYP\APP::getDI()['config']->get('moby_db');
         $this->mysql = DoctrineDriverManager::getConnection($connectionParams, $config);
 
         $this->neo4j = \FYP\APP::getDI()['neo4j'];
@@ -28,20 +28,18 @@ class ImportWordnet extends BaseWorker {
 
         $words = $this->mysql
             ->createQueryBuilder()
-            ->select('w.lemma, s2.pos')
+            ->select('w.*')
             ->from('words', 'w')
-            ->innerJoin('w', 'senses', 's1', 'w.wordid = s1.wordid')
-            ->innerJoin('s1', 'synsets', 's2', 's1.synsetid = s2.synsetid')
-            ->orderBy('w.wordid')
+            ->orderBy('w.word_id')
             ->setFirstResult($data['firstResult'])
             ->setMaxResults($data['maxResults'])
             ->execute()
             ->fetchAll();
 
         foreach($words as $word) {
-            $word = $this->getWord($word['lemma'], $word['pos']);
-            $synonymWords = $this->getSynonymWords($word->getLemma(), $word->getPos());
-            $wordNode = $this->neo4j->getNode($word->getNeo4jId());
+            $wordObj = $this->getWord($word['word']);
+            $synonymWords = $this->getSynonymWords($word['word_id']);
+            $wordNode = $this->neo4j->getNode($wordObj->getNeo4jId());
 
             $batch = new \Everyman\Neo4j\Batch($this->neo4j);
 
@@ -64,19 +62,21 @@ class ImportWordnet extends BaseWorker {
                 $batch->commit();
             }
 
+            $this->touchCurrentJob();
+
         }
 
         return count($words) . ' processed';
 
     }
 
-    private function getWord($lemma, $pos) {
+    private function getWord($lemma) {
 
         $dm = $this->getHelperSet()->get('dm')->getDocumentManager();
 
         $result = $dm
             ->getRepository('\FYP\Database\Documents\Word')
-            ->findOneBy(array('lemma' => $lemma, 'pos' => $pos));
+            ->findOneBy(array('lemma' => strtolower($lemma)));
 
         if (empty($result)) {
             $node = $this
@@ -87,8 +87,7 @@ class ImportWordnet extends BaseWorker {
             $word = new \FYP\Database\Documents\Word();
             $word = $word
                 ->setLemma($lemma)
-                ->setPos($pos)
-                ->setIsWordnet(true)
+                ->setIsThesaurus(true)
                 ->setIsWikipedia(false)
                 ->setNeo4jId($node->getId());
             $dm->persist($word);
@@ -104,27 +103,21 @@ class ImportWordnet extends BaseWorker {
 
     }
 
-    private function getSynonymWords($lemma, $pos) {
+    private function getSynonymWords($wordId) {
 
         $words = $this->mysql
             ->createQueryBuilder()
-            ->select('DISTINCT w2.lemma, sy1.pos')
-            ->from('words', 'w1')
-            ->innerJoin('w1', 'senses', 's1', 's1.wordid = w1.wordid')
-            ->innerJoin('s1', 'senses', 's2', 's1.synsetid = s2.synsetid')
-            ->innerJoin('s2', 'words', 'w2', 'w2.wordid = s2.wordid AND w2.wordid != w1.wordid')
-            ->innerJoin('s2', 'synsets', 'sy1', 'sy1.synsetid = s2.synsetid')
-            ->innerJoin('s1', 'synsets', 'sy2', 'sy2.synsetid = s1.synsetid')
-            ->where('w1.lemma = :lemma AND sy2.pos = :pos')
-            ->setParameter('lemma', $lemma)
-            ->setParameter('pos', $pos)
+            ->select('DISTINCT s.synonym')
+            ->from('synonyms', 's')
+            ->where('s.word_id = :wordid')
+            ->setParameter('wordid', $wordId)
             ->execute()
             ->fetchAll();
 
         $result = array();
 
         foreach($words as $word) {
-            $result[] = $this->getWord($word['lemma'], $word['pos']);
+            $result[] = $this->getWord($word['synonym']);
         }
 
         return $result;

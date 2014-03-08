@@ -27,7 +27,7 @@ class Test extends Command {
         $extractor = new KeywordExtractor($dm);
 
         $synonym = new Synonym();
-        $result = $synonym->getSimilarityScore('animal', 'n', 'human', 'n');
+        $result = $synonym->getSimilarityScore('run', 'man');
         var_dump($result);
 
     }

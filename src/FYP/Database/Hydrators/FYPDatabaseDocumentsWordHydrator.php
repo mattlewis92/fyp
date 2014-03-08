@@ -44,19 +44,11 @@ class FYPDatabaseDocumentsWordHydrator implements HydratorInterface
         }
 
         /** @Field(type="string") */
-        if (isset($data['pos'])) {
-            $value = $data['pos'];
+        if (isset($data['is_thesaurus'])) {
+            $value = $data['is_thesaurus'];
             $return = (string) $value;
-            $this->class->reflFields['pos']->setValue($document, $return);
-            $hydratedData['pos'] = $return;
-        }
-
-        /** @Field(type="string") */
-        if (isset($data['is_wordnet'])) {
-            $value = $data['is_wordnet'];
-            $return = (string) $value;
-            $this->class->reflFields['isWordnet']->setValue($document, $return);
-            $hydratedData['isWordnet'] = $return;
+            $this->class->reflFields['isThesaurus']->setValue($document, $return);
+            $hydratedData['isThesaurus'] = $return;
         }
 
         /** @Field(type="string") */
