@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>User data scraper</title>
+        <title>FYP</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <base href="/">
         <link rel="stylesheet" href="vendor/bootstrap/dist/css/bootstrap.min.css">
@@ -14,16 +14,16 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
         <![endif]-->
     </head>
-    <body ng-app="userData">
+    <body ng-app="fyp">
 
-        <div ng-view></div>
+        <div ui-view></div>
 
         <script src="vendor/angular/angular.min.js"></script>
-        <script src="vendor/angular-route/angular-route.min.js"></script>
+        <script src="vendor/angular-ui-router/release/angular-ui-router.min.js"></script>
         <script src="vendor/angular-cache/dist/angular-cache.min.js"></script>
+        <script src="js/modules.js"></script>
         <script src="js/config.js"></script>
         <script src="js/directives/fileupload.js"></script>
-        <script src="js/directives/tagCloudElement.js"></script>
         <script src="js/services/googleSearch.js"></script>
         <script src="js/services/keywords.js"></script>
         <script src="js/services/crawler.js"></script>
