@@ -31,8 +31,6 @@ class Social extends BaseController {
     }
 
     public function getLinkedInProfileAction() {
-        session_cache_limiter(false);
-        session_start();
 
         $config = \FYP\APP::getDI()['config'];
 
@@ -41,33 +39,15 @@ class Social extends BaseController {
 
         $linkedin = new \LinkedIn\LinkedIn($linkedInConfig);
 
-        if ($this->request()->params('code') == NULL && empty($_SESSION['linkedin_token'])) {
-
-            $loginURL = $linkedin->getLoginUrl(array('r_fullprofile', 'r_emailaddress', 'r_network', 'r_contactinfo'));
-            $this->redirect($loginURL);
-
-        } elseif ($this->request()->params('code') != NULL) {
-
-            $token = $linkedin->getAccessToken($this->request()->params('code'));
-            $_SESSION['linkedin_token'] = $token;
-            $this->redirect('/?linkedin=authenticated');
-
-        } else if (isset($_SESSION['linkedin_token'])) {
-
-            $token = $_SESSION['linkedin_token'];
-            $linkedin->setAccessToken($token);
-            try {
-                $result = $linkedin->get('/people/url=' . urlencode($this->request()->params('profile_url')) . ':(first-name,last-name,headline,location:(name),industry,summary,specialties,positions,picture-url,interests,skills,three-current-positions,three-past-positions)');
-            } catch (\Exception $e) {
-                $this->app->response->setStatus(400);
-                $result = array('error' => $e->getMessage());
-            }
-
-            $this->sendResponse($result);
-
-        } else {
-            throw new \Exception('Could not obtain linkedin access token');
+        $linkedin->setAccessToken($linkedInConfig['access_token']);
+        try {
+            $result = $linkedin->get('/people/url=' . urlencode($this->request()->params('profile_url')) . ':(first-name,last-name,headline,location:(name),industry,summary,specialties,positions,picture-url,interests,skills,three-current-positions,three-past-positions)');
+        } catch (\Exception $e) {
+            $this->app->response->setStatus(400);
+            $result = array('error' => $e->getMessage());
         }
+
+        $this->sendResponse($result);
 
     }
 

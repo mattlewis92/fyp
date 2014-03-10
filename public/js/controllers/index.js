@@ -218,7 +218,7 @@ angular.module('userData.controllers', []).
 
     }
 
-    $scope.linkedinAuthenticated = $route.current.params.linkedin == 'authenticated';
+    $scope.linkedinAuthenticated = true;
 
     $scope.updateKeywords = function(user) {
 
