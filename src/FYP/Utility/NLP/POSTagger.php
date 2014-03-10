@@ -11,8 +11,8 @@ class POSTagger {
 
     private $dm;
 
-    public function __construct($dm) {
-        $this->dm = $dm;
+    public function __construct() {
+        $this->dm = \FYP\APP::getDI()['doctrineManager'];
     }
 
     public function tag(array $words) {

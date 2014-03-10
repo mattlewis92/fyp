@@ -6,7 +6,7 @@ use FYP\App;
 
 class Synonym {
 
-    const MAX_DEPTH = 5;
+    const MAX_DEPTH = 3;
 
     public function getSimilarityScore($lemma1, $lemma2) {
         $neo4j = App::getDI()['neo4j'];
@@ -26,7 +26,7 @@ class Synonym {
         $word1Node = $neo4j->getNode($word1->getNeo4jId());
         $word2Node = $neo4j->getNode($word2->getNeo4jId());
 
-        $pathNodes = $word1Node->findPathsTo($word2Node)->setMaxDepth(self::MAX_DEPTH)->getSinglePath();
+        $pathNodes = $word1Node->findPathsTo($word2Node, 'IS_SYNONYM_OF', \Everyman\Neo4j\Relationship::DirectionOut)->setMaxDepth(self::MAX_DEPTH)->getSinglePath();
 
         if (count($pathNodes) == 0) { //There is no path between these 2 words
             return 0.0;
@@ -34,7 +34,7 @@ class Synonym {
 
         $traversalAmount = count($pathNodes) - 1;
 
-        $score = log(self::MAX_DEPTH - $traversalAmount) / log(self::MAX_DEPTH);
+        $score = log((self::MAX_DEPTH + 2) - $traversalAmount) / log(self::MAX_DEPTH + 2);
 
         return round($score, 2);
 

@@ -6,14 +6,17 @@ use Doctrine\MongoDB\Connection;
 use Doctrine\ODM\MongoDB\Configuration;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\Mapping\Driver\AnnotationDriver;
+use SlimController\Slim;
 
-
-class App {
+class App extends Slim {
 
     private static $di = null;
 
     public function __construct() {
-        $this->setupDependencyInjection();
+        parent::__construct(array(
+            'controller.class_prefix'    => '\\FYP\\API\\Controller',
+            'controller.method_suffix'   => 'Action',
+        ));
     }
 
     public static function getDI() {
@@ -54,6 +57,22 @@ class App {
         };
 
         self::$di = $di;
+    }
+
+    public function initRoutes() {
+
+        $this->addRoutes(array(
+            '/api/social/linkedin'      => 'Social:getLinkedInProfile',
+            '/api/social/twitter'       => 'Social:getTwitterProfile',
+            '/api/nlp/extract_keywords' => 'NLP:extractKeywords',
+            '.+'                        => 'Index:index'
+        ));
+
+    }
+
+    public function run() {
+        $this->initRoutes();
+        return parent::run();
     }
 
 

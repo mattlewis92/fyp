@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "b41c307dce4b007612e50673ae564702",
+    "hash": "622ca948211b3f9882d7e38d88ea54a5",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -895,6 +895,53 @@
             "time": "2014-02-16 18:18:25"
         },
         {
+            "name": "slimcontroller/slimcontroller",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fortrabbit/slimcontroller.git",
+                "reference": "96f9a762e02e10ba5fb4e68f0bfcd6f60269bbe3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fortrabbit/slimcontroller/zipball/96f9a762e02e10ba5fb4e68f0bfcd6f60269bbe3",
+                "reference": "96f9a762e02e10ba5fb4e68f0bfcd6f60269bbe3",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0",
+                "slim/slim": "~2.4.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "0.8.*",
+                "phpunit/phpunit": "3.7.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "SlimController": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ulrich Kautz",
+                    "email": "uk@fortrabbit.de",
+                    "homepage": "http://fortrabbit.com/"
+                }
+            ],
+            "description": "Controller extensions for the Slim Framework",
+            "homepage": "http://github.com/fortrabbit/slimcontroller",
+            "keywords": [
+                "controller",
+                "microframework"
+            ],
+            "time": "2014-02-01 19:54:33"
+        },
+        {
             "name": "symfony/console",
             "version": "v2.4.2",
             "target-dir": "Symfony/Component/Console",
@@ -960,7 +1007,8 @@
     "stability-flags": {
         "j7mbo/twitter-api-php": 20,
         "doctrine/mongodb-odm": 20,
-        "everyman/neo4jphp": 20
+        "everyman/neo4jphp": 20,
+        "slimcontroller/slimcontroller": 20
     },
     "platform": [
 

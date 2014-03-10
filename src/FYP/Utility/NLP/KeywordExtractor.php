@@ -3,7 +3,6 @@
 namespace FYP\Utility\NLP;
 
 use FYP\Utility\NLP\Tokenizer\Lexer;
-use FYP\Utility\NLP\POSTagger;
 use Doctrine\Common\Inflector\Inflector;
 
 class KeywordExtractor {
@@ -12,13 +11,10 @@ class KeywordExtractor {
 
     private $tagger;
 
-    private $inflector;
-
-    public function __construct($dm) {
-        $this->dm = $dm;
+    public function __construct() {
+        $this->dm = \FYP\APP::getDI()['doctrineManager'];
         $this->lexer = new Lexer();
-        $this->tagger = new POSTagger($dm);
-        $this->inflector = new Inflector();
+        $this->tagger = new POSTagger();
     }
 
     public function extract($string) {
@@ -44,7 +40,7 @@ class KeywordExtractor {
             } else if ($concatWithPrevious && !$isNoun) {
                 $concatWithPrevious = false;
 
-                $fullPhrase = implode(' ', $buildFullNoun);
+                $fullPhrase = Inflector::singularize(implode(' ', $buildFullNoun)); //convert it to array and singularize it
 
                 if (isset($result[$fullPhrase])) {
                     $result[$fullPhrase]++;
