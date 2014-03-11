@@ -9,8 +9,26 @@ angular
         $stateProvider
             .state('app', {
                 url: '/',
-                templateUrl: '/views/app.html',
-                controller: 'IndexCtrl'
+                template: '<div class="container"><br /><br /><ui-view/></div>',
+                controller: ['$state', function($state) {
+                    $state.go('app.addUsers');
+                }]
+            })
+            .state('app.addUsers', {
+                templateUrl: '/views/addUsers.html',
+                controller: 'AddUsersCtrl'
+            })
+            .state('app.lookupUsers', {
+                templateUrl: '/views/lookupUsers.html',
+                controller: 'LookupUsersCtrl'
+            })
+            .state('app.viewUsers', {
+                templateUrl: '/views/viewUsers.html',
+                controller: 'ViewUsersCtrl'
+            })
+            .state('app.showMatches', {
+                templateUrl: '/views/showMatches.html',
+                controller: 'ShowMatchesCtrl'
             });
 
     }])

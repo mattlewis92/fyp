@@ -1,0 +1,139 @@
+<div class="text-right">
+    <button class="btn btn-default" ng-click="currentUserIndex = currentUserIndex - 1" ng-disabled="currentUserIndex == 0"><i class="fa fa-arrow-left"></i></button>
+    <h3 style="display: inline;">Showing {{ currentUserIndex + 1 }} to {{ users.length }} - {{ users[currentUserIndex].profile.name }} {{ users[currentUserIndex].profile.surname }}</h3>
+    <button class="btn btn-default" ng-click="currentUserIndex = currentUserIndex + 1" ng-disabled="currentUserIndex == users.length-1"><i class="fa fa-arrow-right"></i></button>
+
+    <!--<button class="btn btn-success" ng-click="showSummary = true">Matching completed</button>-->
+</div>
+
+<br />
+
+<div class="row">
+    <div class="col-md-2">
+        <input type="text" class="form-control" placeholder="First name" ng-model="users[currentUserIndex].profile.name" required>
+    </div>
+    <div class="col-md-2">
+        <input type="text" class="form-control" placeholder="Surname" ng-model="users[currentUserIndex].profile.surname" required>
+    </div>
+    <div class="col-md-2">
+        <input type="email" class="form-control" placeholder="Email" ng-model="users[currentUserIndex].profile.email" required>
+    </div>
+    <div class="col-md-2">
+        <input type="text" class="form-control" placeholder="Company" ng-model="users[currentUserIndex].profile.company">
+    </div>
+    <div class="col-md-2">
+        <input type="text" class="form-control" placeholder="Location" ng-model="users[currentUserIndex].profile.location">
+    </div>
+    <div class="col-md-2">
+        <button class="btn btn-primary btn-block" ng-click="userManager.lookupUser(users[currentUserIndex])"><i class="fa fa-refresh"></i> Refresh</button>
+    </div>
+</div>
+
+<br />
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="well well-sm">
+            <h4>Linkedin</h4>
+            <div class="row" ng-repeat="row in users[currentUserIndex].linkedinProfiles">
+                <img ng-src="{{ row.profile.pictureUrl }}" class="col-md-2">
+                <div class="col-md-7">
+                    <p>{{ row.profile.firstName }} {{ row.profile.lastName }} ({{ row.profile.location.name }})</p>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Company</th>
+                            <th>Position</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="position in row.profile.positions.values">
+                            <td>{{ position.company.name }}</td>
+                            <td>{{ position.title }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-3 text-center">
+                    <button class="btn" ng-class="row.isSelected && 'btn-primary' || 'btn-default'" ng-click="row.isSelected = !row.isSelected; users[currentUserIndex].updateKeywords(); users[currentUserIndex].updateOtherFieldsFromSocial()">Select</button><br /><br />
+                    <a ng-href="{{ row.link }}" target="_blank">View profile</a>
+                </div>
+                <hr />
+            </div>
+            <p ng-show="users[currentUserIndex].linkedinProfiles.length == 0"><em>No linkedin accounts were found.</em></p>
+        </div>
+
+        <div class="well well-sm">
+            <h4>Twitter</h4>
+            <div class="row" ng-repeat="row in users[currentUserIndex].twitterProfiles">
+                <img ng-src="{{ row.profile.profile_image_url }}" class="col-md-2">
+                <div class="col-md-7">
+                    <p>{{ row.profile.name }} ({{ row.profile.location }})</p>
+                    <p><b>@{{ row.profile.screen_name }}</b></p>
+                    <p><a ng-href="{{ row.profile.url }}">{{ row.profile.url }}</a></p>
+                </div>
+                <div class="col-md-3 text-center">
+                    <button class="btn" ng-class="row.isSelected && 'btn-primary' || 'btn-default'" ng-click="row.isSelected = !row.isSelected; users[currentUserIndex].updateKeywords(); users[currentUserIndex].updateOtherFieldsFromSocial()">Select</button><br /><br />
+                    <a ng-href="{{ row.link }}" target="_blank">View profile</a>
+                </div>
+                <hr />
+            </div>
+            <p ng-show="users[currentUserIndex].twitterProfiles.length == 0"><em>No twitter accounts were found.</em></p>
+        </div>
+
+        <!--<div class="well well-sm">
+            <h4>Website pages for <a ng-href="{{ users[currentUserIndex].companyWebsite }}">{{ users[currentUserIndex].companyWebsite }}</a></h4>
+            <div ng-repeat="page in users[currentUserIndex].websitePages">
+                <h4>{{ page.title }}</h4>
+                {{ page.content }}
+            </div>
+            <p ng-hide="users[currentUserIndex].websitePages.length > 0"><em>No website content found.</em></p>
+        </div>-->
+
+        <div class="well well-sm">
+            <h4>Other results</h4>
+            <ul>
+                <li ng-repeat="item in users[currentUserIndex].otherLinks" ng-hide="item.hidden"><a ng-href="{{ item.link }}">{{ item.title }}</a> <a href="javascript:;" ng-click="item.hidden = true" class="text-error"><i class="fa fa-minus-circle text-error"></i></a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+
+        <div class="well well-sm">
+            <h4>Keywords</h4>
+            <ul>
+                <li ng-repeat="keyword in users[currentUserIndex].keywords | orderBy:'weight':true">
+                    <span><a href="javascript:;">{{ keyword.keyword }}</a> ({{keyword.weight }})</span>
+                </li>
+            </ul>
+            <i ng-show="users[currentUserIndex].keywords.length == 0">No keywords found, try selecting a social profile.</i>
+        </div>
+
+        <!--<div class="well well-sm">
+            <h4>Suggested matches</h4>
+            <ul>
+                <li ng-repeat="match in users[currentUserIndex].matches | orderBy:'score':true">
+                    <a href="javascript:;" ng-click="switchUser(match.userIndex)">
+                        {{ match.user.name }} {{ match.user.surname }}
+                    </a>
+                    | Score: {{ match.score }}
+                    <button class="btn btn-default btn-sm" ng-click="addMatch(users[currentUserIndex], match.user)" ng-hide="hasMatch(users[currentUserIndex], match.user)">Selected?</button>
+                    <button class="btn btn-success btn-sm" ng-click="removeMatch(users[currentUserIndex], match.user)" ng-show="hasMatch(users[currentUserIndex], match.user)">Selected?</button>
+                    <ul>
+                        <li ng-repeat="keyword in match.keywords">{{ keyword }}</li>
+                    </ul>
+                </li>
+            </ul>
+            <p ng-show="users[currentUserIndex].matches.length == 0"><em>No matches found :(</em></p>
+            <h4 ng-hide="users[currentUserIndex].matches.length == (users.length-1)">Other users</h4>
+            <ul>
+                <li ng-repeat="user in users" ng-hide="users[currentUserIndex].matchedEmails.indexOf(user.email) > -1 || user.email == users[currentUserIndex].email">
+                    <a href="javascript:;" ng-click="switchUser($index)"> {{ user.name }} {{ user.surname }}</a>
+                    <button class="btn btn-default btn-sm" ng-click="addMatch(users[currentUserIndex], user)" ng-hide="hasMatch(users[currentUserIndex], user)">Selected?</button>
+                    <button class="btn btn-success btn-sm" ng-click="removeMatch(users[currentUserIndex], user)" ng-show="hasMatch(users[currentUserIndex], user)">Selected?</button>
+                </li>
+            </ul>
+        </div>-->
+    </div>
+</div>
