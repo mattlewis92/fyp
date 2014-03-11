@@ -9,7 +9,7 @@ angular
         $stateProvider
             .state('app', {
                 url: '/',
-                template: '<div class="container"><br /><br /><ui-view/></div>',
+                templateUrl: 'container.html',
                 controller: ['$state', function($state) {
                     $state.go('app.addUsers');
                 }]

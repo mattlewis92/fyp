@@ -30,10 +30,27 @@
         <script src="js/services/keywords.js"></script>
         <script src="js/services/crawler.js"></script>
         <script src="js/services/csv.js"></script>
+        <script src="js/services/twitterProfile.js"></script>
+        <script src="js/services/linkedInProfile.js"></script>
+        <script src="js/services/errorHandler.js"></script>
+        <script src="js/controllers/error.js"></script>
         <script src="js/controllers/addUsers.js"></script>
         <script src="js/controllers/lookupUsers.js"></script>
         <script src="js/controllers/viewUsers.js"></script>
         <script src="js/controllers/showMatches.js"></script>
         <script src="js/app.js"></script>
+
+        <script type="text/ng-template" id="container.html">
+            <div class="container">
+                <br /><br />
+                <div class="alert alert-danger" ng-show="errors.length > 0" ng-controller="ErrorCtrl">
+                    <button type="button" class="close" ng-click="errors = []">&times;</button>
+                    <ul>
+                        <li ng-repeat="error in errors">{{ error }}</li>
+                    </ul>
+                </div>
+                <ui-view/>
+            </div>
+        </script>
     </body>
 </html>
