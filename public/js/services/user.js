@@ -1,6 +1,6 @@
 angular
     .module('fyp.services')
-    .service('User', ['$http', '$angularCacheFactory', 'googleSearch', 'keywords', 'UserManager', function ($http, $angularCacheFactory, googleSearch, keywords, UserManager) {
+    .service('user', ['$http', '$angularCacheFactory', 'googleSearch', 'keywords', 'userManager', function ($http, $angularCacheFactory, googleSearch, keywords, userManager) {
 
         return function(profile) {
 
@@ -16,13 +16,13 @@ angular
 
                 angular.forEach(self.linkedinProfiles, function (profile) {
                     if (profile.isSelected == true) {
-                        self.keywords = self.keywords.concat(profile.profile.keywords);
+                        self.keywords = keywords.concatLists(self.keywords, profile.profile.keywords);
                     }
                 });
 
                 angular.forEach(self.twitterProfiles, function (profile) {
                     if (profile.isSelected == true) {
-                        self.keywords = self.keywords.concat(profile.keywords);
+                        self.keywords = keywords.concatLists(self.keywords, profile.keywords);
                     }
                 });
 
@@ -148,7 +148,7 @@ angular
                                 self.linkedinProfiles = self.linkedinProfiles.filter(function(item) {
                                     return !!item;
                                 });
-                                UserManager.totalUsersLoaded++;
+                                userManager.totalUsersLoaded++;
                             }
                         }
 
@@ -209,7 +209,7 @@ angular
                                 self.linkedinProfiles = self.linkedinProfiles.filter(function(item) {
                                    return !!item;
                                 });
-                                UserManager.totalUsersLoaded++;
+                                userManager.totalUsersLoaded++;
                             }
                         }
 
@@ -225,7 +225,7 @@ angular
 
                 });
 
-                if (totalTwitterLinks == 0 && totalLinkedinLinks == 0) UserManager.totalUsersLoaded++;
+                if (totalTwitterLinks == 0 && totalLinkedinLinks == 0) userManager.totalUsersLoaded++;
 
             }
         }

@@ -1,6 +1,6 @@
 angular
     .module('fyp.services')
-    .service('UserManager', ['$rootScope', '$state', function ($rootScope, $state) {
+    .service('userManager', ['$rootScope', '$state', function ($rootScope, $state) {
 
         var self = this;
 

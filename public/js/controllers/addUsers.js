@@ -2,12 +2,12 @@
 
 angular
     .module('fyp.controllers')
-    .controller('AddUsersCtrl', ['$scope', '$state', 'csv', 'UserManager', 'User', function ($scope, $state, csv, UserManager, User) {
+    .controller('AddUsersCtrl', ['$scope', '$state', 'csv', 'userManager', 'user', function ($scope, $state, csv, userManager, user) {
 
-        $scope.users = UserManager.users;
+        $scope.users = userManager.users;
 
         $scope.next = function() {
-            UserManager.lookupAllUsers();
+            userManager.lookupAllUsers();
         }
 
         $scope.$watch('csv', function (newValue) {
@@ -36,8 +36,7 @@ angular
         $scope.user = {};
 
         $scope.addUser = function(profile) {
-            var user = new User(profile);
-            UserManager.addUser(user);
+            userManager.addUser(new user(profile));
         }
 
     }]);

@@ -2,9 +2,9 @@
 
 angular
     .module('fyp.controllers')
-    .controller('LookupUsersCtrl', ['$scope', 'UserManager', function ($scope, UserManager) {
+    .controller('LookupUsersCtrl', ['$scope', 'userManager', function ($scope, userManager) {
 
-        $scope.users = UserManager.users;
-        $scope.totalUsersLoaded = UserManager.totalUsersLoaded;
+        $scope.users = userManager.users;
+        $scope.totalUsersLoaded = userManager.totalUsersLoaded;
 
     }]);
