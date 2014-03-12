@@ -19,16 +19,17 @@ angular.module('fyp.services')
                     angular.forEach(['summary', 'headline', 'industry'], function (field) {
                         if (angular.isDefined(profile[field])) text.push(profile[field]);
                     });
+
                     angular.forEach(profile.positions.values, function (position) {
                         if (position.summary) text.push(position.summary);
                     });
 
                     keywords
                         .extract(text)
-                        .then(function (keywords) {
-                            deferred.resolve({profile: profile, keywords: keywords, link: url});
+                        .then(function (result) {
+                            deferred.resolve({profile: profile, keywords: result.data, link: url});
                         }, function () {
-                            deferred.resolve({profile: profile, keywords: [], link: url});
+                            deferred.resolve({profile: profile, keywords: {}, link: url});
                         });
                 })
                 .error(function(message) {

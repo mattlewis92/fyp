@@ -7,27 +7,43 @@ use \FYP\Utility\BaseController;
 class Social extends BaseController {
 
     public function getTwitterProfileAction() {
+
         $config = \FYP\APP::getDI()['config'];
 
-        $twitter = new \TwitterAPIExchange($config->get('twitter'));
-        $user = json_decode($twitter
-            ->setGetfield('?screen_name=' . urlencode($this->request()->params('screen_name')) . '&count=200')
-            ->buildOauth('https://api.twitter.com/1.1/users/show.json', 'GET')
-            ->performRequest(), true);
+        try {
+            $baseRequest = '?screen_name=' . urlencode($this->request()->params('screen_name'));
+            $user = $this->makeTwitterRequest('users/show', $baseRequest);
+            //$latestTweets = $this->makeTwitterRequest('statuses/user_timeline', $baseRequest . '&count=200&trim_user=1&include_rts=0');
 
-        if (isset($user['errors'])) {
-            $this->app->response->setStatus(400);
-            $result = array('error' => $user['errors'][0]['message']);
-        } else {
             $tweets = json_decode(file_get_contents('https://api.peerindex.com/1/actor/topic?api_key=' . $config->get('peerindex')['api_key'] . '&twitter_screen_name=' . urlencode($this->request()->params('screen_name'))), true);
 
             $result = array(
                 'user' => $user,
-                'peerindex' => $tweets
+                'peerindex' => $tweets,
+                //'latest_tweets' => $lsatestTweets
             );
+
+        } catch (\Exception $e) {
+            $this->app->response->setStatus(400);
+            $result = array('error' => $e->getMessage());
         }
 
         $this->sendResponse($result);
+    }
+
+    private function makeTwitterRequest($path, $getField) {
+        $config = \FYP\APP::getDI()['config'];
+        $twitter = new \TwitterAPIExchange($config->get('twitter'));
+        $result = json_decode($twitter
+            ->setGetfield($getField)
+            ->buildOauth('https://api.twitter.com/1.1/' . $path . '.json', 'GET')
+            ->performRequest(), true);
+
+        if (isset($result['errors'])) {
+            throw new \Exception($result['errors'][0]['message']);
+        }
+
+        return $result;
     }
 
     public function getLinkedInProfileAction() {

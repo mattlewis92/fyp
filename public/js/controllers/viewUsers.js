@@ -10,4 +10,8 @@ angular
 
         $scope.userManager = userManager;
 
+        $scope.isEmptyObject = function(obj) {
+            return angular.equals({}, obj);
+        }
+
     }]);

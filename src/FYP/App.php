@@ -13,6 +13,17 @@ class App extends Slim {
     private static $di = null;
 
     public function __construct() {
+
+        //hydrate post data with the json string that angular sends.
+        $postdata = file_get_contents("php://input");
+        if (!empty($postdata)) {
+            $request = json_decode($postdata, true);
+            foreach($request as $key => $value) {
+                $_POST[$key] = $value;
+            }
+        }
+
+
         parent::__construct(array(
             'controller.class_prefix'    => '\\FYP\\API\\Controller',
             'controller.method_suffix'   => 'Action',

@@ -103,11 +103,11 @@
         <div class="well well-sm">
             <h4>Keywords</h4>
             <ul>
-                <li ng-repeat="keyword in users[currentUserIndex].keywords | orderBy:'weight':true">
-                    <span><a href="javascript:;">{{ keyword.keyword }}</a> ({{keyword.weight }})</span>
+                <li ng-repeat="(word, count) in users[currentUserIndex].keywords">
+                    <span><a href="javascript:;">{{ word }}</a> ({{ count }})</span>
                 </li>
             </ul>
-            <i ng-show="users[currentUserIndex].keywords.length == 0">No keywords found, try selecting a social profile.</i>
+            <i ng-show="isEmptyObject(users[currentUserIndex].keywords)">No keywords found, try selecting a social profile.</i>
         </div>
 
         <!--<div class="well well-sm">

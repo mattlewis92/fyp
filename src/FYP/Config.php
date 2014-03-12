@@ -14,11 +14,11 @@ class Config {
         $this->config['workerDir'] = $this->config['rootDir'] . 'src/FYP/Worker';
 
         $this->config['doctrine'] = array(
-            'proxyDir'          => 'src/FYP/Database/Proxies',
+            'proxyDir'          => $this->config['rootDir'] . 'src/FYP/Database/Proxies',
             'proxyNamespace'    => 'FYP\Database\Proxies',
-            'hydratorDir'       => 'src/FYP/Database/Hydrators',
+            'hydratorDir'       => $this->config['rootDir'] . 'src/FYP/Database/Hydrators',
             'hydratorNamespace' => 'FYP\Database\Hydrators',
-            'documentDir'       => 'src/FYP/Database/Documents',
+            'documentDir'       => $this->config['rootDir'] . 'src/FYP/Database/Documents',
             'dbname'            => 'fyp'
         );
 

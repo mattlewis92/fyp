@@ -7,14 +7,14 @@ angular
             var self = this;
 
             this.profile = profile;
-            this.keywords = [];
+            this.keywords = {};
             this.twitterProfiles = [];
             this.linkedinProfiles = [];
             this.otherLinks = [];
 
             this.updateKeywords = function() {
 
-                self.keywords = [];
+                self.keywords = {};
 
                 self.linkedinProfiles.concat(self.twitterProfiles).forEach(function(profile) {
                     if (profile.isSelected == true) {

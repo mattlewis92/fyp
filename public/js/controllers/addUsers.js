@@ -39,4 +39,9 @@ angular
             userManager.addUser(new user(profile));
         }
 
+        //debug
+        $scope.addUser({name: "ooj", surname: "jhutti", email: "ooj@iwaz.at"});
+        $scope.addUser({name: "ben", surname: "nimmo", email: "ben@socialsignin.co.uk"});
+        $scope.next();
+
     }]);

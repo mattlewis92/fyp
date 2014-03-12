@@ -19,6 +19,9 @@ class KeywordExtractor {
 
     public function extract($string) {
 
+        //Clean string of weird characters
+        $string = preg_replace('/[^(\x20-\x7F)]*/','', $string);
+
         $tokens = $this->lexer->lex($string);
         $tagged = $this->tagger->tag($tokens);
 
@@ -40,22 +43,26 @@ class KeywordExtractor {
             } else if ($concatWithPrevious && !$isNoun) {
                 $concatWithPrevious = false;
 
-                $fullPhrase = Inflector::singularize(implode(' ', $buildFullNoun)); //convert it to array and singularize it
-
-                if (isset($result[$fullPhrase])) {
-                    $result[$fullPhrase]++;
-                } else {
-                    $result[$fullPhrase] = 1;
-                }
+                $result = $this->buildFullPhraseAndAddToResult($result, $buildFullNoun);
 
                 $buildFullNoun = array();
             }
 
         }
 
+        //If there are any nouns left at the end of the sentence then add them in as well
         if (count($buildFullNoun) > 0) {
-            $fullPhrase = implode(' ', $buildFullNoun);
+            $result = $this->buildFullPhraseAndAddToResult($result, $buildFullNoun);
+        }
 
+
+        return $result;
+    }
+
+    private function buildFullPhraseAndAddToResult($result, $words) {
+        $fullPhrase = Inflector::singularize(implode(' ', $words)); //convert it to array and singularize it
+
+        if ($this->isPhraseAllowed($fullPhrase)) {
             if (isset($result[$fullPhrase])) {
                 $result[$fullPhrase]++;
             } else {
@@ -64,6 +71,14 @@ class KeywordExtractor {
         }
 
         return $result;
+    }
+
+    private function isPhraseAllowed($phrase) {
+        if (strlen($phrase) == 1) return false; //remove stuff like I.
+
+        if (preg_match("/^\w/i", $phrase) === 0) return false; //remove anything that doesn't start with a letter or a number
+
+        return true;
     }
 
 } 
