@@ -37,7 +37,7 @@ angular.module('fyp.services')
 
                 if (item.displayLink == 'twitter.com') {
                     twitterProfileUrls.push(item.link);
-                } else if (item.formattedUrl.indexOf('linkedin.com') > -1) {
+                } else if (item.formattedUrl.indexOf('linkedin.com') > -1 && item.link.indexOf('pub/dir/') == -1) {
                     linkedInProfileUrls.push(item.link);
                 } else {
                     otherLinks.push(item);
@@ -67,7 +67,7 @@ angular.module('fyp.services')
                 });
 
             return $q
-                .all([promise1, promise2])
+                .allSettled([promise1, promise2])
                 .then(function() {
                     return {otherLinks: otherLinks, linkedInProfiles: linkedInProfiles, twitterProfiles: twitterProfiles};
                 });

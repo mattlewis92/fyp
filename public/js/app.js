@@ -91,6 +91,11 @@ angular
                             checkStates(states, results, deferred, didAPromiseFail);
                         });
                     });
+
+                    if (states.length == 0) {
+                        deferred.resolve(results);
+                    }
+
                 } else {
                     throw 'allSettled can only handle an array of promises (for now)';
                 }

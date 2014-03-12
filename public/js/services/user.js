@@ -22,6 +22,66 @@ angular
                     }
                 });
 
+                userManager.users.forEach(function(otherUser) {
+                    if ( !angular.equals(self, otherUser) ) {
+                        self.findSimilarityScoreBetweenUsers(otherUser);
+                    };
+                });
+
+            }
+
+            this.findSimilarityScoreBetweenUsers = function(otherUser) {
+                var thisUsersKeywords = self.keywords;
+                var otherUsersKeywords = otherUser.keywords;
+
+                var vector1 = [];
+                var vector2 = [];
+
+                var calculateDocumentLength = function(keywords) {
+                    var documentLength = 0;
+                    angular.forEach(keywords, function(count) {
+                        documentLength += count;
+                    });
+                    return documentLength;
+                }
+
+                var user1DocumentLength = calculateDocumentLength(thisUsersKeywords);
+                var user2DocumentLength = calculateDocumentLength(otherUsersKeywords);
+                var totalDocumentCount = userManager.users.length;
+
+                var totalDocumentsWithTerm = function(term) {
+                    return userManager.users.reduce(function(acc, user) {
+                        return acc + (user.keywords[term] ? 1 : 0);
+                    }, 0);
+                }
+
+                angular.forEach(thisUsersKeywords, function(thisUserCount, word) {
+                    var otherUserWordCount = otherUsersKeywords[word];
+                    if (!otherUserWordCount) otherUserWordCount = 0;
+
+                    var user1TermFrequencyNormalized = thisUserCount / user1DocumentLength;
+                    var user2TermFrequencyNormalized = otherUserWordCount / user2DocumentLength;
+
+                    var documentInfrequency = Math.log(totalDocumentCount / totalDocumentsWithTerm(word));
+
+                    vector1.push(user1TermFrequencyNormalized * documentInfrequency);
+                    vector2.push(user2TermFrequencyNormalized * documentInfrequency);
+                });
+
+                var absVector = function(vector) {
+                    return Math.sqrt(vector.reduce(function(previousValue, currentValue) {
+                        return previousValue + (currentValue * currentValue);
+                    }, 0));
+                }
+
+                var dotProduct = function(vector1, vector2) {
+                    return vector1.reduce(function(previousValue, currentValue, index) {
+                        return previousValue + (currentValue * vector2[index]);
+                    }, 0);
+                }
+
+                var score = dotProduct(vector1, vector2) / (absVector(vector1) * absVector(vector2));
+                if (score) console.log(self.profile.name, 'AND', otherUser.profile.name, score);
             }
 
             this.updateOtherFieldsFromSocial = function() {
