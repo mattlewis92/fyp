@@ -1,6 +1,7 @@
 angular.module('fyp.directives', []);
 angular.module('fyp.controllers', []);
 angular.module('fyp.services', []);
+angular.module('fyp.filters', []);
 angular.module('fyp.config', []);
 angular.module('fyp', [
     'ui.router',
@@ -8,5 +9,6 @@ angular.module('fyp', [
     'fyp.config',
     'fyp.directives',
     'fyp.controllers',
+    'fyp.filters',
     'fyp.services'
 ]);

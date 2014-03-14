@@ -55,7 +55,7 @@
                     </table>
                 </div>
                 <div class="col-md-3 text-center">
-                    <button class="btn" ng-class="row.isSelected && 'btn-primary' || 'btn-default'" ng-click="row.isSelected = !row.isSelected; users[currentUserIndex].updateKeywords(); users[currentUserIndex].updateOtherFieldsFromSocial()">Select</button><br /><br />
+                    <button class="btn" ng-class="{'btn-primary': row.isSelected, 'btn-default': !row.isSelected}" ng-click="users[currentUserIndex].toggleProfile(row)">Select</button><br /><br />
                     <a ng-href="{{ row.link }}" target="_blank">View profile</a>
                 </div>
                 <hr />
@@ -73,7 +73,7 @@
                     <p><a ng-href="{{ row.profile.url }}">{{ row.profile.url }}</a></p>
                 </div>
                 <div class="col-md-3 text-center">
-                    <button class="btn" ng-class="row.isSelected && 'btn-primary' || 'btn-default'" ng-click="row.isSelected = !row.isSelected; users[currentUserIndex].updateKeywords(); users[currentUserIndex].updateOtherFieldsFromSocial()">Select</button><br /><br />
+                    <button class="btn" ng-class="{'btn-primary': row.isSelected, 'btn-default': !row.isSelected}" ng-click="users[currentUserIndex].toggleProfile(row)">Select</button><br /><br />
                     <a ng-href="{{ row.link }}" target="_blank">View profile</a>
                 </div>
                 <hr />
@@ -101,7 +101,23 @@
     <div class="col-md-6">
 
         <div class="well well-sm">
-            <h4>Keywords</h4>
+            <h4>Suggested matches</h4>
+            <ul>
+                <li ng-repeat="match in users[currentUserIndex].matches | orderBy:'score':true">
+                    <a href="javascript:;" ng-click="switchUser(match.user.id)">
+                        {{ match.user.name }}
+                    </a>
+                    | Score: {{ match.score | round:3 }}
+                    <ul>
+                        <li ng-repeat="keyword in match.intersecting_keywords | orderArray">{{ keyword }}</li>
+                    </ul>
+                </li>
+            </ul>
+            <p ng-show="users[currentUserIndex].matches.length == 0"><em>No matches found :(</em></p>
+        </div>
+
+        <div class="well well-sm">
+            <h4>This users keywords</h4>
             <ul>
                 <li ng-repeat="(word, count) in users[currentUserIndex].keywords">
                     <span><a href="javascript:;">{{ word }}</a> ({{ count }})</span>
@@ -110,30 +126,5 @@
             <i ng-show="isEmptyObject(users[currentUserIndex].keywords)">No keywords found, try selecting a social profile.</i>
         </div>
 
-        <!--<div class="well well-sm">
-            <h4>Suggested matches</h4>
-            <ul>
-                <li ng-repeat="match in users[currentUserIndex].matches | orderBy:'score':true">
-                    <a href="javascript:;" ng-click="switchUser(match.userIndex)">
-                        {{ match.user.name }} {{ match.user.surname }}
-                    </a>
-                    | Score: {{ match.score }}
-                    <button class="btn btn-default btn-sm" ng-click="addMatch(users[currentUserIndex], match.user)" ng-hide="hasMatch(users[currentUserIndex], match.user)">Selected?</button>
-                    <button class="btn btn-success btn-sm" ng-click="removeMatch(users[currentUserIndex], match.user)" ng-show="hasMatch(users[currentUserIndex], match.user)">Selected?</button>
-                    <ul>
-                        <li ng-repeat="keyword in match.keywords">{{ keyword }}</li>
-                    </ul>
-                </li>
-            </ul>
-            <p ng-show="users[currentUserIndex].matches.length == 0"><em>No matches found :(</em></p>
-            <h4 ng-hide="users[currentUserIndex].matches.length == (users.length-1)">Other users</h4>
-            <ul>
-                <li ng-repeat="user in users" ng-hide="users[currentUserIndex].matchedEmails.indexOf(user.email) > -1 || user.email == users[currentUserIndex].email">
-                    <a href="javascript:;" ng-click="switchUser($index)"> {{ user.name }} {{ user.surname }}</a>
-                    <button class="btn btn-default btn-sm" ng-click="addMatch(users[currentUserIndex], user)" ng-hide="hasMatch(users[currentUserIndex], user)">Selected?</button>
-                    <button class="btn btn-success btn-sm" ng-click="removeMatch(users[currentUserIndex], user)" ng-show="hasMatch(users[currentUserIndex], user)">Selected?</button>
-                </li>
-            </ul>
-        </div>-->
     </div>
 </div>

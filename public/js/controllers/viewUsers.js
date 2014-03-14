@@ -14,4 +14,14 @@ angular
             return angular.equals({}, obj);
         }
 
+        $scope.switchUser = function(userId) {
+            angular.forEach($scope.users, function(user, index) {
+                if (user.id == userId) $scope.currentUserIndex = index;
+            });
+        }
+
+        $scope.users.forEach(function(user) {
+            user.autoSelectProfiles();
+        });
+
     }]);
