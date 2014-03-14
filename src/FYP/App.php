@@ -76,6 +76,7 @@ class App extends Slim {
             '/api/social/linkedin'      => 'Social:getLinkedInProfile',
             '/api/social/twitter'       => 'Social:getTwitterProfile',
             '/api/nlp/extract_keywords' => 'NLP:extractKeywords',
+            '/api/nlp/synonym_check'    => 'NLP:synonymCheck',
             '.+'                        => 'Index:index'
         ));
 

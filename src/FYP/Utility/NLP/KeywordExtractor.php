@@ -55,12 +55,34 @@ class KeywordExtractor {
             $result = $this->buildFullPhraseAndAddToResult($result, $buildFullNoun);
         }
 
+        return $this->postProcess($result);
+    }
+
+    private function postProcess($phrases) {
+
+        $result = array();
+        foreach($phrases as $phrase => $count) {
+
+            if (strtoupper($phrase) === $phrase) { //if the phrase is all in upper case then add it to the build
+                $result[$phrase] = $count;
+            } elseif (isset($phrases[strtoupper($phrase)])) { //if the same phrase was added in lowercase and uppercase, then merge them
+                if (isset($result[strtoupper($phrase)])) {
+                    $result[strtoupper($phrase)] += $count;
+                } else {
+                    $phrases[strtoupper($phrase)] += $count;
+                }
+            } else {
+                $result[$phrase] = $count;
+            }
+
+        }
 
         return $result;
+
     }
 
     private function buildFullPhraseAndAddToResult($result, $words) {
-        $fullPhrase = Inflector::singularize(implode(' ', $words)); //convert it to array and singularize it
+        $fullPhrase = $this->transformPhrase(implode(' ', $words));
 
         if ($this->isPhraseAllowed($fullPhrase)) {
             if (isset($result[$fullPhrase])) {
@@ -71,6 +93,16 @@ class KeywordExtractor {
         }
 
         return $result;
+    }
+
+    private function transformPhrase($phrase) {
+        $phrase = trim($phrase); //trim it
+
+        $phrase = Inflector::singularize($phrase); //singularize it
+
+        $phrase = strtoupper($phrase) === $phrase ? $phrase : ucwords(strtolower($phrase)); //convert to lower case
+
+        return $phrase;
     }
 
     private function isPhraseAllowed($phrase) {

@@ -26,8 +26,7 @@ class Test extends Command {
 
         $extractor = new KeywordExtractor($dm);
 
-        $synonym = new Synonym();
-        $result = $synonym->getSimilarityScore('foot', 'ceiling');
+        $result = $extractor->extract('HTML is the best and html is pretty good as well. I think mongodb is a pretty sweet database as well.');
         var_dump($result);
 
     }

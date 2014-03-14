@@ -40,10 +40,33 @@ class Synonym {
 
     }
 
+    public function areSynonyms($lemma1, $lemma2) {
+        $neo4j = App::getDI()['neo4j'];
+
+        $word1 = $this->getWord($lemma1);
+        $word2 = $this->getWord($lemma2);
+
+        if (empty($word1) || empty($word2)) {
+            return false;
+        }
+
+        $word1Node = $neo4j->getNode($word1->getNeo4jId());
+        $word2Node = $neo4j->getNode($word2->getNeo4jId());
+
+        $pathNodes = $word1Node->findPathsTo($word2Node)->setMaxDepth(1)->getSinglePath();
+
+        if (count($pathNodes) == 0) {
+            return false;
+        }
+
+        return true;
+
+    }
+
     private function getWord($lemma) {
         return App::getDI()['doctrineManager']
             ->getRepository('\FYP\Database\Documents\Word')
-            ->findOneBy(array('lemma' => $lemma));
+            ->findOneBy(array('lemma' => strtolower($lemma)));
     }
 
 } 
