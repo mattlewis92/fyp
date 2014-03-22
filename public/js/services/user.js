@@ -1,6 +1,6 @@
 angular
     .module('fyp.services')
-    .service('user', ['$http', '$q', '$angularCacheFactory', 'googleSearch', 'keywords', 'userManager', 'errorHandler', 'distance', function ($http, $q, $angularCacheFactory, googleSearch, keywords, userManager, errorHandler, distance) {
+    .service('user', ['$http', '$q', '$angularCacheFactory', 'googleSearch', 'keywords', 'userManager', 'errorHandler', 'distance', 'linkedInProfile', 'twitterProfile', function ($http, $q, $angularCacheFactory, googleSearch, keywords, userManager, errorHandler, distance, linkedInProfile, twitterProfile) {
 
         //from http://stackoverflow.com/questions/7616461/generate-a-hash-from-string-in-javascript-jquery
         var generateId = function(uniqueString) {
@@ -260,6 +260,26 @@ angular
 
                 return result;
 
+            }
+
+            this.addManualLinkedInProfile = function(profileUrl) {
+                linkedInProfile
+                    .extractFromUrl(profileUrl)
+                    .then(function(profile) {
+                        profile.isSelected = false;
+                        self.linkedinProfiles.push(profile);
+                        self.autoSelectProfiles();
+                    });
+            }
+
+            this.addManualTwitterProfile = function(profileUrl) {
+                twitterProfile
+                    .extractFromUrl(profileUrl)
+                    .then(function(profile) {
+                        profile.isSelected = false;
+                        self.twitterProfiles.push(profile);
+                        self.autoSelectProfiles();
+                    });
             }
 
         }

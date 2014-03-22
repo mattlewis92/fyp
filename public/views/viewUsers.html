@@ -80,24 +80,45 @@
                 <hr />
             </div>
             <p ng-show="userManager.users[currentUserIndex].linkedinProfiles.length == 0"><em>No linkedin accounts were found.</em></p>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <input type="text" class="form-control" placeholder="Manually add a profile" ng-model="linkedInManual">
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-block btn-primary" ng-click="userManager.users[currentUserIndex].addManualLinkedInProfile(linkedInManual); linkedInManual = ''">Add profile</button>
+                </div>
+            </div>
+
         </div>
 
         <div class="well well-sm">
             <h4>Twitter</h4>
             <div class="row" ng-repeat="row in userManager.users[currentUserIndex].twitterProfiles">
-                <img ng-src="{{ row.profile.profile_image_url || 'http://placehold.it/48x48' }}" class="col-md-2">
-                <div class="col-md-7">
-                    <p>{{ row.profile.name }} ({{ row.profile.location }})</p>
-                    <p><b>@{{ row.profile.screen_name }}</b></p>
-                    <p><a ng-href="{{ row.profile.url }}">{{ row.profile.url }}</a></p>
+                <div class="col-md-12">
+                    <img ng-src="{{ row.profile.profile_image_url || 'http://placehold.it/48x48' }}" class="col-md-2">
+                    <div class="col-md-7">
+                        <p>{{ row.profile.name }} ({{ row.profile.location }})</p>
+                        <p><b>@{{ row.profile.screen_name }}</b></p>
+                        <p><a ng-href="{{ row.profile.url }}">{{ row.profile.url }}</a><br/></p>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <button class="btn" ng-class="{'btn-primary': row.isSelected, 'btn-default': !row.isSelected}" ng-click="userManager.users[currentUserIndex].toggleProfile(row)">Select</button><br /><br />
+                        <a ng-href="{{ row.link }}" target="_blank">View profile</a>
+                    </div>
+                    <hr />
                 </div>
-                <div class="col-md-3 text-center">
-                    <button class="btn" ng-class="{'btn-primary': row.isSelected, 'btn-default': !row.isSelected}" ng-click="userManager.users[currentUserIndex].toggleProfile(row)">Select</button><br /><br />
-                    <a ng-href="{{ row.link }}" target="_blank">View profile</a>
-                </div>
-                <hr />
             </div>
             <p ng-show="userManager.users[currentUserIndex].twitterProfiles.length == 0"><em>No twitter accounts were found.</em></p>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <input type="text" class="form-control" placeholder="Manually add a profile" ng-model="twitterManual">
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-block btn-primary" ng-click="userManager.users[currentUserIndex].addManualTwitterProfile(twitterManual); twitterManual = ''">Add profile</button>
+                </div>
+            </div>
         </div>
 
         <div class="well well-sm">
