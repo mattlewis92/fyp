@@ -40,6 +40,9 @@ angular
         });
 
     }])
+    .config(['$httpProvider', function($httpProvider) {
+        //$httpProvider.interceptors.push('httpThrottler');
+    }])
     .config(['$provide', function ($provide) {
         $provide.decorator('$q', ['$delegate', function ($delegate) {
             var $q = $delegate;

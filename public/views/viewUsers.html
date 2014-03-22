@@ -1,31 +1,50 @@
-<div class="text-right">
-    <button class="btn btn-default" ng-click="currentUserIndex = currentUserIndex - 1" ng-disabled="currentUserIndex == 0"><i class="fa fa-arrow-left"></i></button>
-    <h3 style="display: inline;">Showing {{ currentUserIndex + 1 }} to {{ users.length }} - {{ users[currentUserIndex].profile.name }} {{ users[currentUserIndex].profile.surname }}</h3>
-    <button class="btn btn-default" ng-click="currentUserIndex = currentUserIndex + 1" ng-disabled="currentUserIndex == users.length-1"><i class="fa fa-arrow-right"></i></button>
-
-    <!--<button class="btn btn-success" ng-click="showSummary = true">Matching completed</button>-->
+<div class="alert alert-info" ng-show="usersRemoved">
+    <button type="button" class="close" ng-click="usersRemoved = 0">&times;</button>
+    <strong>{{ usersRemoved }} users</strong> were removed as they contained no relevant profile data.
 </div>
 
-<br />
+<div class="row">
+    <div class="col-md-6">
+        <input type="text" ng-model="userToSelect" placeholder="Search for a user" typeahead="user as user.name for user in typeaheadUsers | filter:$viewValue | limitTo:10" typeahead-editable="false" typeahead-template-url="typeahead.html" typeahead-on-select="userSelected();" class="form-control">
+    </div>
+
+    <div class="col-md-6">
+        <div class="text-right">
+            <button class="btn btn-default" ng-click="currentUserIndex = currentUserIndex - 1" ng-disabled="currentUserIndex == 0"><i class="fa fa-arrow-left"></i></button>
+            <h3 style="display: inline;">Showing {{ currentUserIndex + 1 }} to {{ userManager.users.length }} - {{ userManager.users[currentUserIndex].profile.name }} {{ userManager.users[currentUserIndex].profile.surname }}</h3>
+            <button class="btn btn-default" ng-click="currentUserIndex = currentUserIndex + 1" ng-disabled="currentUserIndex == userManager.users.length-1"><i class="fa fa-arrow-right"></i></button>
+
+            <!--<button class="btn btn-success" ng-click="showSummary = true">Matching completed</button>-->
+        </div>
+    </div>
+</div>
+
+<script type="text/ng-template" id="typeahead.html">
+    <a>
+        <span bind-html-unsafe="match.model.name + ' ' + match.model.surname | typeaheadHighlight:query"></span>
+    </a>
+</script>
+
+<hr />
 
 <div class="row">
     <div class="col-md-2">
-        <input type="text" class="form-control" placeholder="First name" ng-model="users[currentUserIndex].profile.name" required>
+        <input type="text" class="form-control" placeholder="First name" ng-model="userManager.users[currentUserIndex].profile.name" required>
     </div>
     <div class="col-md-2">
-        <input type="text" class="form-control" placeholder="Surname" ng-model="users[currentUserIndex].profile.surname" required>
+        <input type="text" class="form-control" placeholder="Surname" ng-model="userManager.users[currentUserIndex].profile.surname" required>
     </div>
     <div class="col-md-2">
-        <input type="email" class="form-control" placeholder="Email" ng-model="users[currentUserIndex].profile.email" required>
+        <input type="text" class="form-control" placeholder="Company" ng-model="userManager.users[currentUserIndex].profile.company">
     </div>
     <div class="col-md-2">
-        <input type="text" class="form-control" placeholder="Company" ng-model="users[currentUserIndex].profile.company">
+        <input type="text" class="form-control" placeholder="Location" ng-model="userManager.users[currentUserIndex].profile.location">
     </div>
     <div class="col-md-2">
-        <input type="text" class="form-control" placeholder="Location" ng-model="users[currentUserIndex].profile.location">
+        <button class="btn btn-primary btn-block" ng-click="userManager.lookupUser(userManager.users[currentUserIndex])"><i class="fa fa-refresh"></i> Refresh</button>
     </div>
     <div class="col-md-2">
-        <button class="btn btn-primary btn-block" ng-click="userManager.lookupUser(users[currentUserIndex])"><i class="fa fa-refresh"></i> Refresh</button>
+        <button class="btn btn-danger btn-block" ng-click="userManager.removeUser(userManager.users[currentUserIndex])" ng-show="userManager.users.length > 1"><i class="fa fa-times"></i> Remove user</button>
     </div>
 </div>
 
@@ -35,8 +54,8 @@
     <div class="col-md-6">
         <div class="well well-sm">
             <h4>Linkedin</h4>
-            <div class="row" ng-repeat="row in users[currentUserIndex].linkedinProfiles">
-                <img ng-src="{{ row.profile.pictureUrl }}" class="col-md-2">
+            <div class="row" ng-repeat="row in userManager.users[currentUserIndex].linkedinProfiles">
+                <img ng-src="{{ row.profile.pictureUrl || 'http://placehold.it/48x48' }}" class="col-md-2">
                 <div class="col-md-7">
                     <p>{{ row.profile.firstName }} {{ row.profile.lastName }} ({{ row.profile.location.name }})</p>
                     <table class="table">
@@ -55,45 +74,36 @@
                     </table>
                 </div>
                 <div class="col-md-3 text-center">
-                    <button class="btn" ng-class="{'btn-primary': row.isSelected, 'btn-default': !row.isSelected}" ng-click="users[currentUserIndex].toggleProfile(row)">Select</button><br /><br />
+                    <button class="btn" ng-class="{'btn-primary': row.isSelected, 'btn-default': !row.isSelected}" ng-click="userManager.users[currentUserIndex].toggleProfile(row)">Select</button><br /><br />
                     <a ng-href="{{ row.link }}" target="_blank">View profile</a>
                 </div>
                 <hr />
             </div>
-            <p ng-show="users[currentUserIndex].linkedinProfiles.length == 0"><em>No linkedin accounts were found.</em></p>
+            <p ng-show="userManager.users[currentUserIndex].linkedinProfiles.length == 0"><em>No linkedin accounts were found.</em></p>
         </div>
 
         <div class="well well-sm">
             <h4>Twitter</h4>
-            <div class="row" ng-repeat="row in users[currentUserIndex].twitterProfiles">
-                <img ng-src="{{ row.profile.profile_image_url }}" class="col-md-2">
+            <div class="row" ng-repeat="row in userManager.users[currentUserIndex].twitterProfiles">
+                <img ng-src="{{ row.profile.profile_image_url || 'http://placehold.it/48x48' }}" class="col-md-2">
                 <div class="col-md-7">
                     <p>{{ row.profile.name }} ({{ row.profile.location }})</p>
                     <p><b>@{{ row.profile.screen_name }}</b></p>
                     <p><a ng-href="{{ row.profile.url }}">{{ row.profile.url }}</a></p>
                 </div>
                 <div class="col-md-3 text-center">
-                    <button class="btn" ng-class="{'btn-primary': row.isSelected, 'btn-default': !row.isSelected}" ng-click="users[currentUserIndex].toggleProfile(row)">Select</button><br /><br />
+                    <button class="btn" ng-class="{'btn-primary': row.isSelected, 'btn-default': !row.isSelected}" ng-click="userManager.users[currentUserIndex].toggleProfile(row)">Select</button><br /><br />
                     <a ng-href="{{ row.link }}" target="_blank">View profile</a>
                 </div>
                 <hr />
             </div>
-            <p ng-show="users[currentUserIndex].twitterProfiles.length == 0"><em>No twitter accounts were found.</em></p>
+            <p ng-show="userManager.users[currentUserIndex].twitterProfiles.length == 0"><em>No twitter accounts were found.</em></p>
         </div>
-
-        <!--<div class="well well-sm">
-            <h4>Website pages for <a ng-href="{{ users[currentUserIndex].companyWebsite }}">{{ users[currentUserIndex].companyWebsite }}</a></h4>
-            <div ng-repeat="page in users[currentUserIndex].websitePages">
-                <h4>{{ page.title }}</h4>
-                {{ page.content }}
-            </div>
-            <p ng-hide="users[currentUserIndex].websitePages.length > 0"><em>No website content found.</em></p>
-        </div>-->
 
         <div class="well well-sm">
             <h4>Other results</h4>
             <ul>
-                <li ng-repeat="item in users[currentUserIndex].otherLinks" ng-hide="item.hidden"><a ng-href="{{ item.link }}">{{ item.title }}</a> <a href="javascript:;" ng-click="item.hidden = true" class="text-error"><i class="fa fa-minus-circle text-error"></i></a></li>
+                <li ng-repeat="item in userManager.users[currentUserIndex].otherLinks" ng-hide="item.hidden"><a ng-href="{{ item.link }}">{{ item.title }}</a> <a href="javascript:;" ng-click="item.hidden = true" class="text-error"><i class="fa fa-minus-circle text-error"></i></a></li>
             </ul>
         </div>
     </div>
@@ -103,7 +113,7 @@
         <div class="well well-sm">
             <h4>Suggested matches</h4>
             <ul>
-                <li ng-repeat="match in users[currentUserIndex].matches | orderBy:'score':true">
+                <li ng-repeat="match in userManager.users[currentUserIndex].matches | orderBy:'score':true">
                     <a href="javascript:;" ng-click="switchUser(match.user.id)">
                         {{ match.user.name }}
                     </a>
@@ -113,17 +123,17 @@
                     </ul>
                 </li>
             </ul>
-            <p ng-show="users[currentUserIndex].matches.length == 0"><em>No matches found :(</em></p>
+            <p ng-show="userManager.users[currentUserIndex].matches.length == 0"><em>No matches found :(</em></p>
         </div>
 
         <div class="well well-sm">
             <h4>This users keywords</h4>
             <ul>
-                <li ng-repeat="(word, count) in users[currentUserIndex].keywords">
+                <li ng-repeat="(word, count) in userManager.users[currentUserIndex].keywords">
                     <span><a href="javascript:;">{{ word }}</a> ({{ count }})</span>
                 </li>
             </ul>
-            <i ng-show="isEmptyObject(users[currentUserIndex].keywords)">No keywords found, try selecting a social profile.</i>
+            <i ng-show="isEmptyObject(userManager.users[currentUserIndex].keywords)">No keywords found, try selecting a social profile.</i>
         </div>
 
     </div>

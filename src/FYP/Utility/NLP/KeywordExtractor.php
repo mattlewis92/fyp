@@ -36,16 +36,26 @@ class KeywordExtractor {
             $isAdjective = $item['tag'] == 'JJ';
 
             if (!$concatWithPrevious && ($isNoun || ($isAdjective && preg_match("/[A-Z]/", substr($item['word'], 0, 1)) > 0))) {
+
                 $concatWithPrevious = true;
                 $buildFullNoun[] = $item['word'];
-            } elseif ($concatWithPrevious && $isNoun) {
+
+            } elseif ($concatWithPrevious && ($isNoun || strtolower($item['word']) == 'and')) {
+
                 $buildFullNoun[] = $item['word'];
+
             } else if ($concatWithPrevious && !$isNoun) {
+
                 $concatWithPrevious = false;
+
+                if (strtolower($buildFullNoun[count($buildFullNoun) - 1]) == 'and') {
+                    unset($buildFullNoun[count($buildFullNoun) - 1]);
+                }
 
                 $result = $this->buildFullPhraseAndAddToResult($result, $buildFullNoun);
 
                 $buildFullNoun = array();
+
             }
 
         }

@@ -18,7 +18,7 @@ angular
 
             var self = this;
 
-            this.id = generateId(profile.email);
+            this.id = generateId(profile.name + profile.surname);
             this.profile = profile;
             this.keywords = {};
             this.twitterProfiles = [];
@@ -52,6 +52,11 @@ angular
             }
 
             this.findSimilarityScoreBetweenUsers = function(otherUser) {
+
+                angular.forEach(self.matches, function(match, index) {
+                    if (match.user.id == otherUser.id) self.matches.splice(index, 1);
+                });
+
                 var thisUsersKeywords = self.keywords;
                 var otherUsersKeywords = otherUser.keywords;
 
@@ -109,18 +114,8 @@ angular
 
                 var score = dotProduct(vector1, vector2) / (absVector(vector1) * absVector(vector2));
                 if (score) {
-
-                    var matchIndex = null;
-                    angular.forEach(self.matches, function(match, index) {
-                        if (match.user.id == otherUser.id) matchIndex = index;
-                    });
                     var match = {score: score, user: {id: otherUser.id, name: otherUser.profile.name + ' ' + otherUser.profile.surname}, intersecting_keywords: intersectingKeywords};
-
-                    if (matchIndex !== null) {
-                        self.matches[matchIndex] = match;
-                    } else {
-                        self.matches.push(match);
-                    }
+                    self.matches.push(match);
 
                 }
             }
@@ -136,8 +131,7 @@ angular
             this.getFullProfileToPersist = function() {
 
                 var response = {
-                    keywords: self.keywords,
-                    company_website: 'http://' + self.profile.email.split('@')[1].toLowerCase() + '/'
+                    keywords: self.keywords
                 };
 
                 angular.forEach(self.linkedinProfiles, function (profile) {
@@ -158,6 +152,9 @@ angular
             }
 
             this.lookup = function() {
+
+                var deferred = $q.defer();
+
                 var searchText = self.profile.name + ' ' + self.profile.surname;
 
                 angular.forEach(['company', 'location'], function (field) {
@@ -173,46 +170,49 @@ angular
                         self.linkedinProfiles = result.linkedInProfiles;
                         self.otherLinks = result.otherLinks;
                         userManager.totalUsersLoaded++;
+                        deferred.resolve(true);
                     })
                     .catch(errorHandler.handleCriticalError);
 
+                return deferred.promise;
+
+            }
+
+            var doesProfileMatch = function(toCompareArr) {
+                var matchingScores = [];
+
+                toCompareArr.forEach(function(toCompare) {
+                    if (toCompare.given && toCompare.found) {
+
+                        if (typeof toCompare.found == 'object') {
+                            var highestScore = 0;
+                            toCompare.found.forEach(function(item) {
+                                var jwd = distance.jaroWinker(toCompare.given, item);
+                                if (jwd > highestScore) highestScore = jwd;
+                            });
+                            matchingScores.push(highestScore);
+                        } else {
+                            matchingScores.push(distance.jaroWinker(toCompare.given, toCompare.found));
+                        }
+                    }
+                });
+
+                var isProfile = matchingScores.length > 0 && matchingScores.filter(function(score) {
+                    return score >= 0.75;
+                }).length == matchingScores.length;
+
+                return isProfile;
             }
 
             this.autoSelectProfiles = function() {
-
-                var doesProfileMatch = function(toCompareArr) {
-                    var matchingScores = [];
-
-                    toCompareArr.forEach(function(toCompare) {
-                        if (toCompare.given && toCompare.found) {
-
-                            if (typeof toCompare.found == 'object') {
-                                var highestScore = 0;
-                                toCompare.found.forEach(function(item) {
-                                    var jwd = distance.jaroWinker(toCompare.given, item);
-                                    if (jwd > highestScore) highestScore = jwd;
-                                });
-                                matchingScores.push(highestScore);
-                            } else {
-                                matchingScores.push(distance.jaroWinker(toCompare.given, toCompare.found));
-                            }
-                        }
-                    });
-
-                    var isProfile = matchingScores.length > 0 && matchingScores.filter(function(score) {
-                        return score >= 0.8;
-                    }).length == matchingScores.length;
-
-                    return isProfile;
-                }
 
                 self.linkedinProfiles.forEach(function(profile) {
 
                     var toCompareArr = [
                         {given: self.profile.name, found: profile.profile.firstName},
                         {given: self.profile.surname, found: profile.profile.lastName},
-                        {given: self.profile.location, found: profile.profile.location.name},
-                        {given: self.profile.company, found: profile.profile.positions.values ? profile.profile.positions.values.map(function(item) {
+                        {given: self.profile.location, found: profile.profile.location ? profile.profile.location.name : ''},
+                        {given: self.profile.company, found: (profile.profile.positions && profile.profile.positions.values) ? profile.profile.positions.values.map(function(item) {
                             return item.company.name
                         }) : null}
                     ];
@@ -229,6 +229,37 @@ angular
 
                     if (doesProfileMatch(toCompareArr) && !profile.isSelected) self.toggleProfile(profile);
                 });
+            }
+
+            this.hasFoundProfileData = function() {
+
+                if (self.linkedinProfiles.length == 0 && self.twitterProfiles.length == 0) {
+                    return false;
+                }
+
+                var result = false;
+
+                self.linkedinProfiles.forEach(function(profile) {
+
+                    var toCompareArr = [
+                        {given: self.profile.name, found: profile.profile.firstName},
+                        {given: self.profile.surname, found: profile.profile.lastName}
+                    ];
+
+                    if (doesProfileMatch(toCompareArr)) result = true;
+
+                });
+
+                self.twitterProfiles.forEach(function(profile) {
+                    var toCompareArr = [
+                        {given: self.profile.name + ' ' + self.profile.surname, found: profile.profile.name}
+                    ];
+
+                    if (doesProfileMatch(toCompareArr)) result = true;
+                });
+
+                return result;
+
             }
 
         }

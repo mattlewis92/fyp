@@ -1,12 +1,12 @@
 angular.module('fyp.services')
-    .service('googleSearch', ['$http', '$q', 'googleSearchApiKey', 'googleSearchId', 'linkedInProfile', 'twitterProfile', function ($http, $q, googleSearchApiKey, googleSearchId, linkedInProfile, twitterProfile) {
+    .service('googleSearch', ['$http', '$q', '$angularCacheFactory', 'googleSearchApiKey', 'googleSearchId', 'linkedInProfile', 'twitterProfile', function ($http, $q, $angularCacheFactory, googleSearchApiKey, googleSearchId, linkedInProfile, twitterProfile) {
 
         this.query = function (text) {
 
             var self = this;
 
             return $http
-                .jsonp('https://www.googleapis.com/customsearch/v1?key=' + googleSearchApiKey + '&cx=' + googleSearchId + '&q=' + encodeURIComponent(text) + '&callback=JSON_CALLBACK')
+                .jsonp('https://www.googleapis.com/customsearch/v1?key=' + googleSearchApiKey + '&cx=' + googleSearchId + '&q=' + encodeURIComponent(text) + '&callback=JSON_CALLBACK', {cache: $angularCacheFactory.get('defaultCache')})
                 .then(function(results) {
                     return self.parseResults(results.data);
                 });

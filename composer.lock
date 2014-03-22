@@ -554,12 +554,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/mongodb-odm.git",
-                "reference": "e99d818b4224b35fab38abc230696d9282a1ecea"
+                "reference": "c25f282adccac62f9f70c36727e3520d2f4be70f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/mongodb-odm/zipball/e99d818b4224b35fab38abc230696d9282a1ecea",
-                "reference": "e99d818b4224b35fab38abc230696d9282a1ecea",
+                "url": "https://api.github.com/repos/doctrine/mongodb-odm/zipball/c25f282adccac62f9f70c36727e3520d2f4be70f",
+                "reference": "c25f282adccac62f9f70c36727e3520d2f4be70f",
                 "shasum": ""
             },
             "require": {
@@ -624,7 +624,7 @@
                 "odm",
                 "persistence"
             ],
-            "time": "2014-02-27 04:04:39"
+            "time": "2014-03-13 15:48:42"
         },
         {
             "name": "everyman/neo4jphp",
@@ -632,12 +632,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/jadell/neo4jphp.git",
-                "reference": "d63b62a7c4df8f0d3e4468db2866abc8aaa84063"
+                "reference": "6ca33b202b403c4f564f6a2f3bacc9482597b203"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jadell/neo4jphp/zipball/d63b62a7c4df8f0d3e4468db2866abc8aaa84063",
-                "reference": "d63b62a7c4df8f0d3e4468db2866abc8aaa84063",
+                "url": "https://api.github.com/repos/jadell/neo4jphp/zipball/6ca33b202b403c4f564f6a2f3bacc9482597b203",
+                "reference": "6ca33b202b403c4f564f6a2f3bacc9482597b203",
                 "shasum": ""
             },
             "require": {
@@ -673,7 +673,7 @@
                 "graph",
                 "neo4j"
             ],
-            "time": "2014-03-01 22:57:01"
+            "time": "2014-03-13 03:35:01"
         },
         {
             "name": "j7mbo/twitter-api-php",

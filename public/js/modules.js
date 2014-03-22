@@ -5,7 +5,9 @@ angular.module('fyp.filters', []);
 angular.module('fyp.config', []);
 angular.module('fyp', [
     'ui.router',
+    'ui.bootstrap',
     'jmdobry.angular-cache',
+    'http-throttler',
     'fyp.config',
     'fyp.directives',
     'fyp.controllers',

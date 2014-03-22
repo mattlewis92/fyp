@@ -21,9 +21,8 @@ angular
                         $scope.addUser({
                             name: line[0],
                             surname: line[1],
-                            company: line[2],
-                            location: line[3],
-                            email: line[4]
+                            location: line[2],
+                            company: line[3]
                         });
                     }
 
@@ -40,9 +39,10 @@ angular
         }
 
         //debug
+        //return;
         $scope.addUser({name: "ooj", surname: "jhutti", email: "ooj@iwaz.at", company: "iwazat"});
         $scope.addUser({name: "ben", surname: "nimmo", email: "ben@socialsignin.co.uk"});
         $scope.addUser({name: "Stuart", surname: "ford", email: "stuart@glide.uk.com", company: "Glide"});
-        $scope.next();
+        //$scope.next();
 
     }]);

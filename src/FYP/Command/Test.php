@@ -26,7 +26,7 @@ class Test extends Command {
 
         $extractor = new KeywordExtractor($dm);
 
-        $result = $extractor->extract('HTML is the best and html is pretty good as well. I think mongodb is a pretty sweet database as well.');
+        $result = $extractor->extract('Information Technology and Services are the best and Communities is pretty good as well. I think Community is a pretty sweet database as well.');
         var_dump($result);
 
     }

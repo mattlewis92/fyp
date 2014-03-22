@@ -20,9 +20,11 @@ angular.module('fyp.services')
                         if (angular.isDefined(profile[field])) text.push(profile[field]);
                     });
 
-                    angular.forEach(profile.positions.values, function (position) {
-                        if (position.summary) text.push(position.summary);
-                    });
+                    if (profile.positions) {
+                        angular.forEach(profile.positions.values, function (position) {
+                            if (position.summary) text.push(position.summary);
+                        });
+                    }
 
                     keywords
                         .extract(text)

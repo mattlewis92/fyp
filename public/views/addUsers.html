@@ -8,7 +8,7 @@
     <form name="singleUserForm">
         <div class="col-md-3"><input type="text" placeholder="First name" class="form-control" ng-model="user.name" required></div>
         <div class="col-md-3"><input type="text" placeholder="Surname" class="form-control" ng-model="user.surname" required></div>
-        <div class="col-md-3"><input type="email" placeholder="Email" class="form-control" ng-model="user.email" required></div>
+        <div class="col-md-3"><input type="email" placeholder="Location" class="form-control" ng-model="user.location"></div>
         <div class="col-md-3"><button class="btn btn-default btn-block" ng-click="addUser(user); user = {}" ng-disabled="!singleUserForm.$valid">Add user</button></div>
     </form>
 </div><br />
@@ -17,17 +17,25 @@
     <thead>
     <th>Name</th>
     <th>Surname</th>
-    <th>Email</th>
-    <th>Company</th>
     <th>Location</th>
+    <th>Company</th>
+    <th>Actions</th>
     </thead>
     <tbody>
     <tr ng-repeat="user in users">
-        <td>{{ user.profile.name }}</td>
-        <td>{{ user.profile.surname }}</td>
-        <td>{{ user.profile.email }}</td>
-        <td>{{ user.profile.company }}</td>
-        <td>{{ user.profile.location }}</td>
+        <td ng-hide="user.editable">{{ user.profile.name }}</td>
+        <td ng-hide="user.editable">{{ user.profile.surname }}</td>
+        <td ng-hide="user.editable">{{ user.profile.location }}</td>
+        <td ng-hide="user.editable">{{ user.profile.company }}</td>
+        <td ng-show="user.editable"><input type="text" class="form-control" ng-model="user.profile.name"></td>
+        <td ng-show="user.editable"><input type="text" class="form-control" ng-model="user.profile.surname"></td>
+        <td ng-show="user.editable"><input type="text" class="form-control" ng-model="user.profile.location"></td>
+        <td ng-show="user.editable"><input type="text" class="form-control" ng-model="user.profile.company"></td>
+        <td>
+            <button class="btn btn-info" ng-click="user.editable = true" ng-hide="user.editable"><i class="fa fa-edit"></i></button>
+            <button class="btn btn-info" ng-click="user.editable = false" ng-show="user.editable"><i class="fa fa-save"></i></button>
+            <button class="btn btn-danger" ng-click="users.splice($index, 1)"><i class="fa fa-times"></i></button>
+        </td>
     </tr>
     </tbody>
 </table><br />
@@ -35,3 +43,5 @@
 <div class="text-center">
     <button class="btn btn-danger btn-lg" ng-show="users.length > 0" ng-click="next();">Lookup users!</button>
 </div>
+
+<br /><br />

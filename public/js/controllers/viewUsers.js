@@ -6,7 +6,7 @@ angular
 
         $scope.currentUserIndex = 0;
 
-        $scope.users = userManager.users;
+        $scope.typeaheadUsers = [];
 
         $scope.userManager = userManager;
 
@@ -15,13 +15,23 @@ angular
         }
 
         $scope.switchUser = function(userId) {
-            angular.forEach($scope.users, function(user, index) {
+            angular.forEach($scope.userManager.users, function(user, index) {
                 if (user.id == userId) $scope.currentUserIndex = index;
             });
         }
 
-        $scope.users.forEach(function(user) {
+        $scope.userManager.users.forEach(function(user, index) {
             user.autoSelectProfiles();
+            var profile = angular.copy(user.profile);
+            profile.index = index;
+            $scope.typeaheadUsers.push(profile);
         });
+
+        $scope.userSelected = function() {
+            $scope.currentUserIndex = $scope.userToSelect.index;
+            $scope.userToSelect = null;
+        }
+
+        $scope.usersRemoved = userManager.removeUsersWithNoProfilesFound();
 
     }]);

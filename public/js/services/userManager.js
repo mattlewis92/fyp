@@ -29,15 +29,43 @@ angular
         this.lookupAllUsers = function() {
             self.totalUsersLoaded = 0;
             $state.go('app.lookupUsers');
-            self.users.forEach(function(user) {
-                user.lookup();
-            });
+            var users = angular.copy(self.users);
+            var maxToProcess = 5;
+
+            var lookupUser = function() {
+                if (users.length > 0) {
+                    console.log('Looking up user1');
+                    var user = users.pop();
+                    user.lookup().then(lookupUser);
+                }
+            }
+
+            for (var i = 0; i < maxToProcess; i++) {
+                lookupUser();
+            }
+
         }
 
         this.lookupUser = function(user) {
             self.totalUsersLoaded--;
             $state.go('app.lookupUsers');
             user.lookup();
+        }
+
+        this.removeUsersWithNoProfilesFound = function() {
+
+            var newUsers = self.users.filter(function(user) {
+               return user.hasFoundProfileData();
+            });
+
+            var removedCount = self.users.length - newUsers.length;
+
+            self.users = newUsers;
+
+            self.totalUsersLoaded -= removedCount;
+
+            return removedCount;
+
         }
 
     }]);
