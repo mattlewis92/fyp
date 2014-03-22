@@ -2,9 +2,9 @@
 
 angular
     .module('fyp.controllers')
-    .controller('ViewUsersCtrl', ['$scope', 'userManager', function ($scope, userManager) {
+    .controller('ViewUsersCtrl', ['$scope', 'userManager', 'context', function ($scope, userManager, context) {
 
-        $scope.currentUserIndex = 0;
+        $scope.currentUserIndex = context.currentUserIndex || 0;
 
         $scope.typeaheadUsers = [];
 
@@ -16,7 +16,10 @@ angular
 
         $scope.switchUser = function(userId) {
             angular.forEach($scope.userManager.users, function(user, index) {
-                if (user.id == userId) $scope.currentUserIndex = index;
+                if (user.id == userId) {
+                    $scope.currentUserIndex = index;
+                    context.currentUserIndex = index;
+                }
             });
         }
 

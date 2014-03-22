@@ -10,9 +10,9 @@
 
     <div class="col-md-6">
         <div class="text-right">
-            <button class="btn btn-default" ng-click="currentUserIndex = currentUserIndex - 1" ng-disabled="currentUserIndex == 0"><i class="fa fa-arrow-left"></i></button>
+            <button class="btn btn-default" ng-click="switchUser(userManager.users[currentUserIndex - 1].id)" ng-disabled="currentUserIndex == 0"><i class="fa fa-arrow-left"></i></button>
             <h3 style="display: inline;">Showing {{ currentUserIndex + 1 }} to {{ userManager.users.length }} - {{ userManager.users[currentUserIndex].profile.name }} {{ userManager.users[currentUserIndex].profile.surname }}</h3>
-            <button class="btn btn-default" ng-click="currentUserIndex = currentUserIndex + 1" ng-disabled="currentUserIndex == userManager.users.length-1"><i class="fa fa-arrow-right"></i></button>
+            <button class="btn btn-default" ng-click="switchUser(userManager.users[currentUserIndex + 1].id)" ng-disabled="currentUserIndex == userManager.users.length-1"><i class="fa fa-arrow-right"></i></button>
 
             <!--<button class="btn btn-success" ng-click="showSummary = true">Matching completed</button>-->
         </div>
