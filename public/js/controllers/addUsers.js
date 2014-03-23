@@ -48,7 +48,7 @@ angular
             });
 
         //debug
-        //return;
+        return;
         $scope.addUser({name: "ooj", surname: "jhutti", email: "ooj@iwaz.at", company: "iwazat"});
         $scope.addUser({name: "ben", surname: "nimmo", email: "ben@socialsignin.co.uk"});
         $scope.addUser({name: "Stuart", surname: "ford", email: "stuart@glide.uk.com", company: "Glide"});

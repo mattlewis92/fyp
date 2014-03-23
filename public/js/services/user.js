@@ -174,6 +174,7 @@ angular
                                 });
                             delete self.profile.twitterScreenName; //stop it from being re-searched
                         } else {
+                            self.autoSelectProfiles();
                             userManager.totalUsersLoaded++;
                             deferred.resolve(true);
                         }

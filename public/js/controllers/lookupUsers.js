@@ -12,9 +12,12 @@ angular
             if (newValue == $scope.userManager.users.length) {
                 watcher(); //cancel the watcher
 
+                $scope.loadingOtherUsers = true;
+
                 userManager
                     .loadInOtherUsers(user)
                     .then(function() {
+                        $scope.loadingOtherUsers = false;
                         $state.go('app.viewUsers');
                     });
             }

@@ -6,8 +6,6 @@ angular
 
         $scope.currentUserIndex = context.currentUserIndex || 0;
 
-        $scope.typeaheadUsers = [];
-
         $scope.userManager = userManager;
 
         $scope.isEmptyObject = function(obj) {
@@ -24,15 +22,8 @@ angular
             });
         }
 
-        $scope.userManager.users.forEach(function(user, index) {
-            user.autoSelectProfiles();
-            var profile = angular.copy(user.profile);
-            profile.index = index;
-            $scope.typeaheadUsers.push(profile);
-        });
-
         $scope.userSelected = function() {
-            $scope.currentUserIndex = $scope.userToSelect.index;
+            $scope.switchUser($scope.userToSelect.id);
             $scope.userToSelect = null;
         }
 

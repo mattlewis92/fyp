@@ -1,11 +1,15 @@
 <div class="text-center"><i class="fa fa-spinner fa-spin fa-4x"></i></div><br />
-<h3 class="text-center">
-    Processing: <b>{{ userManager.totalUsersLoaded }}</b> out of <b>{{ userManager.users.length }} users</b>
+<h3 class="text-center" ng-hide="loadingOtherUsers">
+    Processing: <strong>{{ userManager.totalUsersLoaded }}</strong> out of <strong>{{ userManager.users.length }} users</strong>
+</h3>
+
+<h3 class="text-center" ng-show="loadingOtherUsers">
+    <strong>Loading existing users...</strong>
 </h3>
 
 <br />
 
-<div class="row">
+<div class="row" ng-hide="loadingOtherUsers">
     <div class="col-md-6 col-md-offset-3">
         <progressbar max="userManager.users.length" value="userManager.totalUsersLoaded"></progressbar>
     </div>

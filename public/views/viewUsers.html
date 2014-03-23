@@ -5,7 +5,7 @@
 
 <div class="row">
     <div class="col-md-6">
-        <input type="text" ng-model="userToSelect" placeholder="Search for a user" typeahead="user as user.name for user in typeaheadUsers | filter:$viewValue | limitTo:10" typeahead-editable="false" typeahead-template-url="typeahead.html" typeahead-on-select="userSelected();" class="form-control">
+        <input type="text" ng-model="userToSelect" placeholder="Search for a user" typeahead="user for user in userManager.users | filter:{profile:$viewValue} | limitTo:10" typeahead-editable="false" typeahead-template-url="typeahead.html" typeahead-on-select="userSelected();" class="form-control">
     </div>
 
     <div class="col-md-6">
@@ -21,7 +21,7 @@
 
 <script type="text/ng-template" id="typeahead.html">
     <a>
-        <span bind-html-unsafe="match.model.name + ' ' + match.model.surname | typeaheadHighlight:query"></span>
+        <span bind-html-unsafe="match.model.profile.name + ' ' + match.model.profile.surname | typeaheadHighlight:query"></span>
     </a>
 </script>
 

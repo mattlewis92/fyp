@@ -3,6 +3,7 @@
 namespace FYP\API\Controller;
 
 use \FYP\Utility\BaseController;
+use \LinkedIn\LinkedIn;
 
 class Social extends BaseController {
 
@@ -53,7 +54,7 @@ class Social extends BaseController {
         $linkedInConfig = $config->get('linkedin');
         $linkedInConfig['callback_url'] = 'http://' . $this->request()->getHost() . '/api/' . 'social/linkedin';
 
-        $linkedin = new \LinkedIn\LinkedIn($linkedInConfig);
+        $linkedin = new LinkedIn($linkedInConfig);
 
         $linkedin->setAccessToken($linkedInConfig['access_token']);
         try {
@@ -64,6 +65,30 @@ class Social extends BaseController {
         }
 
         $this->sendResponse($result);
+
+    }
+
+    public function linkedInLoginAction() {
+        $config = \FYP\APP::getDI()['config'];
+
+        $linkedInConfig = $config->get('linkedin');
+        $linkedInConfig['callback_url'] = 'http://' . $this->request()->getHost() . '/api/' . 'social/linked_in_login';
+
+        $linkedin = new LinkedIn($linkedInConfig);
+
+        $code = $this->request()->get('code');
+
+        if (empty($code)) {
+            $redirectUrl = $linkedin->getLoginUrl(array(
+                LinkedIn::SCOPE_BASIC_PROFILE
+            ));
+
+            $this->redirect($redirectUrl);
+        } else {
+            $token = $linkedin->getAccessToken($code);
+
+            echo $token;
+        }
 
     }
 
