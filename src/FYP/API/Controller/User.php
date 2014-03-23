@@ -7,6 +7,9 @@ use \FYP\Utility\BaseController;
 class User extends BaseController
 {
 
+    /**
+     * Save a new or existing user to the database
+     */
     public function saveAction()
     {
 
@@ -14,11 +17,12 @@ class User extends BaseController
 
         $data = $this->request()->post('user');
 
+        //if the user already exists
         if ($data['id']) {
             $user = $dm
                 ->getRepository('\FYP\Database\Documents\User')
                 ->find($data['id']);
-        } else {
+        } else { //otherwise make a new user
             $user = new \FYP\Database\Documents\User();
         }
 
@@ -56,6 +60,9 @@ class User extends BaseController
 
     }
 
+    /**
+     * Delete a saved user from the database
+     */
     public function deleteAction()
     {
         \FYP\APP::getDI()['doctrineManager']
@@ -69,6 +76,9 @@ class User extends BaseController
         $this->sendResponse(array('deleted' => true));
     }
 
+    /**
+     * Find all users in a given group
+     */
     public function findByGroupNameAction()
     {
         $users = \FYP\APP::getDI()['doctrineManager']
@@ -91,6 +101,9 @@ class User extends BaseController
         $this->sendResponse($users);
     }
 
+    /**
+     * Get all group names
+     */
     public function getGroupNamesAction()
     {
 

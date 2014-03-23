@@ -11,6 +11,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 use FYP\Utility\NLP\KeywordExtractor;
 use FYP\Utility\NLP\Synonym;
 
+/**
+ * Test command
+ *
+ * Class Test
+ * @package FYP\Command
+ */
 class Test extends Command {
 
     protected function configure() {

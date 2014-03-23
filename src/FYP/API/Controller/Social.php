@@ -7,6 +7,9 @@ use \LinkedIn\LinkedIn;
 
 class Social extends BaseController {
 
+    /**
+     * Given a twitter handle, get the public info and use peerindex to extract key terms as my keyword extractor doesn't work so well with tweets
+     */
     public function getTwitterProfileAction() {
 
         $config = \FYP\APP::getDI()['config'];
@@ -32,6 +35,14 @@ class Social extends BaseController {
         $this->sendResponse($result);
     }
 
+    /**
+     * Make a GET request to twitter given the api endpoint and the data to pass
+     *
+     * @param $path
+     * @param $getField
+     * @return mixed
+     * @throws \Exception
+     */
     private function makeTwitterRequest($path, $getField) {
         $config = \FYP\APP::getDI()['config'];
         $twitter = new \TwitterAPIExchange($config->get('twitter'));
@@ -47,6 +58,9 @@ class Social extends BaseController {
         return $result;
     }
 
+    /**
+     * Extract linkedin public profile info
+     */
     public function getLinkedInProfileAction() {
 
         $config = \FYP\APP::getDI()['config'];
@@ -68,6 +82,9 @@ class Social extends BaseController {
 
     }
 
+    /**
+     * Helper function to let me grab linked in access tokens
+     */
     public function linkedInLoginAction() {
         $config = \FYP\APP::getDI()['config'];
 
@@ -78,13 +95,14 @@ class Social extends BaseController {
 
         $code = $this->request()->get('code');
 
+        //stage 1 -> redirect to linkedin to authenticate
         if (empty($code)) {
             $redirectUrl = $linkedin->getLoginUrl(array(
                 LinkedIn::SCOPE_BASIC_PROFILE
             ));
 
             $this->redirect($redirectUrl);
-        } else {
+        } else { //we have the code, get the token
             $token = $linkedin->getAccessToken($code);
 
             echo $token;

@@ -6,6 +6,12 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Produce jobs for the import workers to import the moby database of synonyms
+ *
+ * Class ProduceMobyJobs
+ * @package FYP\Command
+ */
 class ProduceMobyJobs extends Command {
 
     private $mysql;

@@ -8,7 +8,12 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-
+/**
+ * Extracts member details from the tech wednesday meetup group
+ *
+ * Class ExtractTechWednesday
+ * @package FYP\Command
+ */
 class ExtractTechWednesday extends Command {
 
     protected function configure() {
@@ -24,6 +29,7 @@ class ExtractTechWednesday extends Command {
 
         error_reporting(E_ALL);
 
+        //Work out how many members there are in total
         $baseUrl = 'http://www.meetup.com/tech-wednesday/members/?offset=%d&desc=1&sort=chapter_member.atime';
 
         $firstPage = file_get_contents(sprintf($baseUrl, 0));
@@ -37,6 +43,7 @@ class ExtractTechWednesday extends Command {
         $progress = $this->getHelperSet()->get('progress');
         $progress->start($output, $totalMembers);
 
+        //go through each page
         for ($i = 0; $i < $totalMembers; $i += 20) {
             $pageUrl = sprintf($baseUrl, $i);
             $page = file_get_contents($pageUrl);
@@ -44,6 +51,7 @@ class ExtractTechWednesday extends Command {
 
             $memberUrls = $matches[1];
 
+            //extract details
             foreach($memberUrls as $url) {
                 $profile = file_get_contents($url);
 

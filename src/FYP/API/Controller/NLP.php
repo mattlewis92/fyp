@@ -8,6 +8,9 @@ use FYP\Utility\BaseController;
 
 class NLP extends BaseController {
 
+    /**
+     * Given some text extract the keywords
+     */
     public function extractKeywordsAction() {
 
         $extractor = new KeywordExtractor();
@@ -17,6 +20,9 @@ class NLP extends BaseController {
 
     }
 
+    /**
+     * Given a list of pairs of words, tell if they're synonyms
+     */
     public function synonymCheckAction() {
 
         $synonym = new Synonym();

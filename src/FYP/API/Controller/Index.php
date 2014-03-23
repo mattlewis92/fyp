@@ -6,6 +6,9 @@ use \FYP\Utility\BaseController;
 
 class Index extends BaseController {
 
+    /**
+     * Serve the index page
+     */
     public function indexAction() {
 
         $config = \FYP\APP::getDI()['config'];
