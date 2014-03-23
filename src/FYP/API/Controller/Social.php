@@ -15,7 +15,7 @@ class Social extends BaseController {
             $user = $this->makeTwitterRequest('users/show', $baseRequest);
             //$latestTweets = $this->makeTwitterRequest('statuses/user_timeline', $baseRequest . '&count=200&trim_user=1&include_rts=0');
 
-            $tweets = json_decode(file_get_contents('https://api.peerindex.com/1/actor/topic?api_key=' . $config->get('peerindex')['api_key'] . '&twitter_screen_name=' . urlencode($this->request()->params('screen_name'))), true);
+            $tweets = json_decode(@file_get_contents('https://api.peerindex.com/1/actor/topic?api_key=' . $config->get('peerindex')['api_key'] . '&twitter_screen_name=' . urlencode($this->request()->params('screen_name'))), true);
 
             $result = array(
                 'user' => $user,

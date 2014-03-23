@@ -169,8 +169,21 @@ angular
                         self.twitterProfiles = result.twitterProfiles;
                         self.linkedinProfiles = result.linkedInProfiles;
                         self.otherLinks = result.otherLinks;
-                        userManager.totalUsersLoaded++;
-                        deferred.resolve(true);
+
+                        if (self.profile.twitterScreenName) {
+                            self.twitterProfiles = [];
+                            self
+                                .addManualTwitterProfile('https://twitter.com/' + self.profile.twitterScreenName)
+                                .finally(function() {
+                                    userManager.totalUsersLoaded++;
+                                    deferred.resolve(true);
+                                });
+                            delete self.profile.twitterScreenName; //stop it from being re-searched
+                        } else {
+                            userManager.totalUsersLoaded++;
+                            deferred.resolve(true);
+                        }
+
                     })
                     .catch(errorHandler.handleCriticalError);
 
@@ -263,7 +276,7 @@ angular
             }
 
             this.addManualLinkedInProfile = function(profileUrl) {
-                linkedInProfile
+                return linkedInProfile
                     .extractFromUrl(profileUrl)
                     .then(function(profile) {
                         profile.isSelected = false;
@@ -273,7 +286,7 @@ angular
             }
 
             this.addManualTwitterProfile = function(profileUrl) {
-                twitterProfile
+                return twitterProfile
                     .extractFromUrl(profileUrl)
                     .then(function(profile) {
                         profile.isSelected = false;

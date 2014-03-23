@@ -22,7 +22,8 @@ angular
                             name: line[0],
                             surname: line[1],
                             location: line[2],
-                            company: line[3]
+                            company: line[3],
+                            twitterScreenName: line[4]
                         });
                     }
 

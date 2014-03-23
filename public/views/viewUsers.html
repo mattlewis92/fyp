@@ -151,7 +151,7 @@
             <h4>This users keywords</h4>
             <ul>
                 <li ng-repeat="(word, count) in userManager.users[currentUserIndex].keywords">
-                    <span><a href="javascript:;">{{ word }}</a> ({{ count }})</span>
+                    <span>{{ word }}</a> ({{ count }})</span>
                 </li>
             </ul>
             <i ng-show="isEmptyObject(userManager.users[currentUserIndex].keywords)">No keywords found, try selecting a social profile.</i>

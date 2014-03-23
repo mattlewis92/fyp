@@ -13,13 +13,15 @@ angular.module('fyp.services')
 
                     keywords = {};
 
-                    profile.peerindex.topics.forEach(function(topic) {
-                       keywords[topic.name] = 1;
-                    });
+                    if (profile.peerindex) {
+                        profile.peerindex.topics.forEach(function(topic) {
+                            keywords[topic.name] = 1;
+                        });
 
-                    profile.peerindex.benchmark_topics.forEach(function(topic) {
-                        keywords[topic.name] = 1;
-                    });
+                        profile.peerindex.benchmark_topics.forEach(function(topic) {
+                            keywords[topic.name] = 1;
+                        });
+                    }
 
                     deferred.resolve({profile: profile.user, keywords: keywords, link: profileUrl});
 
