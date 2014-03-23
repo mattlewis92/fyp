@@ -15,6 +15,7 @@ angular
         }
 
         $scope.switchUser = function(userId) {
+
             angular.forEach($scope.userManager.users, function(user, index) {
                 if (user.id == userId) {
                     $scope.currentUserIndex = index;

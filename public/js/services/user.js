@@ -2,23 +2,11 @@ angular
     .module('fyp.services')
     .service('user', ['$http', '$q', '$angularCacheFactory', 'googleSearch', 'keywords', 'userManager', 'errorHandler', 'distance', 'linkedInProfile', 'twitterProfile', function ($http, $q, $angularCacheFactory, googleSearch, keywords, userManager, errorHandler, distance, linkedInProfile, twitterProfile) {
 
-        //from http://stackoverflow.com/questions/7616461/generate-a-hash-from-string-in-javascript-jquery
-        var generateId = function(uniqueString) {
-            var hash = 0, i, char;
-            if (uniqueString.length == 0) return hash;
-            for (i = 0, l = uniqueString.length; i < l; i++) {
-                char  = uniqueString.charCodeAt(i);
-                hash  = ((hash<<5)-hash)+char;
-                hash |= 0; // Convert to 32bit integer
-            }
-            return hash;
-        }
-
         return function(profile) {
 
             var self = this;
 
-            this.id = generateId(profile.name + profile.surname);
+            this.id = null; //will be set when persisted
             this.profile = profile;
             this.keywords = {};
             this.twitterProfiles = [];
@@ -30,6 +18,7 @@ angular
                 profile.isSelected = !profile.isSelected;
                 self.updateKeywords();
                 self.updateOtherFieldsFromSocial();
+                self.persist();
             }
 
             this.updateKeywords = function() {
@@ -128,27 +117,28 @@ angular
                 });
             }
 
-            this.getFullProfileToPersist = function() {
+            this.persist = function() {
 
-                var response = {
-                    keywords: self.keywords
-                };
+               var dataToSend = {
+                   id: self.id,
+                   name: self.profile.name,
+                   surname: self.profile.surname,
+                   company: self.profile.company,
+                   location: self.profile.location,
+                   group_name: userManager.currentGroup,
+                   keywords: self.keywords,
+                   twitter_profiles: self.twitterProfiles,
+                   linked_in_profiles: self.linkedinProfiles,
+                   other_links: self.other_links
+               };
 
-                angular.forEach(self.linkedinProfiles, function (profile) {
-                    if (profile.isSelected == true) {
-                        if (profile.profile.summary) response.bio = profile.profile.summary;
-                        if (profile.profile.pictureUrl) response.avatar = profile.profile.pictureUrl;
-                    }
-                });
+               return $http
+                   .post('/api/user/save', {user: dataToSend})
+                   .success(function(result) {
+                       self.id = result.id;
+                   })
+                   .error(errorHandler.handleCriticalError);
 
-                angular.forEach(self.twitterProfiles, function (profile) {
-                    if (profile.isSelected == true) {
-                        if (profile.profile.description && !response.bio) response.bio = profile.profile.description;
-                        if (profile.profile.profile_image_url && !response.avatar) response.avatar = profile.profile.profile_image_url;
-                    }
-                });
-
-                return response;
             }
 
             this.lookup = function() {
@@ -170,6 +160,10 @@ angular
                         self.linkedinProfiles = result.linkedInProfiles;
                         self.otherLinks = result.otherLinks;
 
+                        return self.persist();
+
+                    })
+                    .then(function() {
                         if (self.profile.twitterScreenName) {
                             self.twitterProfiles = [];
                             self
@@ -183,7 +177,6 @@ angular
                             userManager.totalUsersLoaded++;
                             deferred.resolve(true);
                         }
-
                     })
                     .catch(errorHandler.handleCriticalError);
 
@@ -242,6 +235,7 @@ angular
 
                     if (doesProfileMatch(toCompareArr) && !profile.isSelected) self.toggleProfile(profile);
                 });
+
             }
 
             this.hasFoundProfileData = function() {
@@ -282,6 +276,7 @@ angular
                         profile.isSelected = false;
                         self.linkedinProfiles.push(profile);
                         self.autoSelectProfiles();
+                        self.persist();
                     });
             }
 
@@ -292,6 +287,7 @@ angular
                         profile.isSelected = false;
                         self.twitterProfiles.push(profile);
                         self.autoSelectProfiles();
+                        self.persist();
                     });
             }
 

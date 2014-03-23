@@ -6,6 +6,8 @@ angular
 
         $scope.users = userManager.users;
 
+        $scope.userManager = userManager;
+
         $scope.next = function() {
             userManager.lookupAllUsers();
         }
@@ -38,6 +40,12 @@ angular
         $scope.addUser = function(profile) {
             userManager.addUser(new user(profile));
         }
+
+        userManager
+            .getAvailableGroups()
+            .success(function(result) {
+                $scope.groups = result.groups;
+            });
 
         //debug
         //return;

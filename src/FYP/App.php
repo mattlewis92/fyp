@@ -73,11 +73,15 @@ class App extends Slim {
     public function initRoutes() {
 
         $this->addRoutes(array(
-            '/api/social/linkedin'      => 'Social:getLinkedInProfile',
-            '/api/social/twitter'       => 'Social:getTwitterProfile',
-            '/api/nlp/extract_keywords' => 'NLP:extractKeywords',
-            '/api/nlp/synonym_check'    => 'NLP:synonymCheck',
-            '.+'                        => 'Index:index'
+            '/api/social/linkedin'          => 'Social:getLinkedInProfile',
+            '/api/social/twitter'           => 'Social:getTwitterProfile',
+            '/api/nlp/extract_keywords'     => 'NLP:extractKeywords',
+            '/api/nlp/synonym_check'        => 'NLP:synonymCheck',
+            '/api/user/get_group_names'     => 'User:getGroupNames',
+            '/api/user/find_by_group_name'  => 'User:findByGroupName',
+            '/api/user/delete'              => 'User:delete',
+            '/api/user/save'                => 'User:save',
+            '.+'                            => 'Index:index'
         ));
 
     }

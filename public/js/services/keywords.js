@@ -1,6 +1,6 @@
 angular
     .module('fyp.services')
-    .service('keywords', ['$http', '$q', function ($http, $q) {
+    .service('keywords', ['$http', '$q', '$angularCacheFactory', function ($http, $q, $angularCacheFactory) {
 
         var addKeyword = function (list, word, count) {
 
@@ -31,7 +31,7 @@ angular
                 return item;
             });
 
-            return $http.post('/api/nlp/extract_keywords', {text: textArray.join(' ')});
+            return $http.post('/api/nlp/extract_keywords', {text: textArray.join(' ')}, {cache: $angularCacheFactory.get('defaultCache')});
         }
 
     }]);

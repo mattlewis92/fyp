@@ -7,8 +7,8 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 /**
  * @ODM\Document(collection="lexicon")
  */
-class Lexicon
-{
+class Lexicon {
+
     /** @ODM\Id */
     private $id;
 

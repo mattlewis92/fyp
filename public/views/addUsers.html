@@ -1,5 +1,5 @@
 <div class="text-center">
-    <p><button class="btn btn-lg btn-primary btn-file">Upload CSV file <input type="file" file-upload="csv"></button></p><br />
+    <p><button class="btn btn-lg btn-primary btn-file">Upload CSV file <input type="file" file-upload="csv"></button></p>
     <p><h3 ng-hide="showSingleUserForm">- or -</h3></p><br />
     <p ng-hide="showSingleUserForm"><button class="btn btn-default btn-lg" ng-click="showSingleUserForm = true">Add users one by one</button></p>
 </div>
@@ -8,7 +8,7 @@
     <form name="singleUserForm">
         <div class="col-md-3"><input type="text" placeholder="First name" class="form-control" ng-model="user.name" required></div>
         <div class="col-md-3"><input type="text" placeholder="Surname" class="form-control" ng-model="user.surname" required></div>
-        <div class="col-md-3"><input type="email" placeholder="Location" class="form-control" ng-model="user.location"></div>
+        <div class="col-md-3"><input type="text" placeholder="Location" class="form-control" ng-model="user.location"></div>
         <div class="col-md-3"><button class="btn btn-default btn-block" ng-click="addUser(user); user = {}" ng-disabled="!singleUserForm.$valid">Add user</button></div>
     </form>
 </div><br />
@@ -40,8 +40,30 @@
     </tbody>
 </table><br />
 
+<div class="row">
+    <div class="col-md-2 text-right">
+        <strong style="display: inline-block; padding-top:5px">Add users to group: </strong>
+    </div>
+    <div class="col-md-4">
+        <select class="form-control" ng-model="userManager.currentGroup" ng-options="val for val in groups">
+            <option value="">No group selected</option>
+        </select>
+    </div>
+    <div class="col-md-2 text-right">
+        <strong style="display: inline-block; padding-top:5px">Or create a new one: </strong>
+    </div>
+    <div class="col-md-4">
+        <div class="input-group">
+            <input type="text" class="form-control" ng-model="newGroup">
+            <span class="input-group-btn">
+                <button class="btn btn-default" type="button" ng-click="groups.push(newGroup); userManager.currentGroup = newGroup; newGroup = ''" ng-disabled="!newGroup">Add</button>
+            </span>
+        </div>
+    </div>
+</div><br />
+
 <div class="text-center">
-    <button class="btn btn-danger btn-lg" ng-show="users.length > 0" ng-click="next();">Lookup users!</button>
+    <button class="btn btn-danger btn-lg" ng-show="userManager.currentGroup" ng-click="next();">Show user info</button>
 </div>
 
 <br /><br />
