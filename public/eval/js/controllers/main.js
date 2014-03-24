@@ -4,19 +4,23 @@ angular
     .module('eval.controllers')
     .controller('MainCtrl', ['$scope', '$http', 'userManager', 'user', function ($scope, $http, userManager, user) {
 
+        //hard code the current group for testing purposes
         userManager.currentGroup = 'Tech Wednesday';
 
         $scope.loading = true;
 
+        //load in users
         userManager
             .loadInOtherUsers(user)
             .then(function() {
                 $scope.loading = false;
 
+                //find matches between users
                 userManager.users.forEach(function(user) {
                     user.updateKeywords();
                 });
 
+                //sort users by the number of matches found
                 userManager.users.sort(function(a, b) {
                     return b.matches.length - a.matches.length;
                 });
@@ -26,6 +30,7 @@ angular
 
         $scope.otherUsers = [];
 
+        //find user by id
         var findById = function(id) {
             return userManager.users.filter(function(user) {
                return user.id == id;
@@ -36,6 +41,7 @@ angular
 
         $scope.currentUser = 0;
 
+        //when a user is selected from the drop down
         $scope.$watch('userId', function(newValue) {
             if (newValue) {
                 $scope.otherUsers = [];
@@ -45,18 +51,20 @@ angular
                         userIds.push(user.id);
                         $scope.user = user;
 
+                        //grab the best matches
                         user.matches.sort(function(a, b) {
                             return b.score - a.score;
                         });
 
                         user.matches.forEach(function(match) {
-                            if ($scope.otherUsers.length == 10) {
+                            if ($scope.otherUsers.length == 10) { //only grab 10 matches
                                 return;
                             }
                             $scope.otherUsers.push({score: match.score, user: findById(match.user.id)});
                             userIds.push(match.user.id);
                         });
 
+                        //now find some other random users that weren't matches
                         userManager.users = shuffle(userManager.users);
 
                         userManager.users.forEach(function(user) {
@@ -78,6 +86,7 @@ angular
             return o;
         }
 
+        //get the users avatar from social network data
         $scope.getAvatar = function(user) {
 
            if (!user) return;
@@ -95,6 +104,7 @@ angular
            return avatar;
         }
 
+        //get a given users linked in url
         $scope.getLinkedIn = function(user) {
             if (!user) return;
             var result;
@@ -104,6 +114,7 @@ angular
             return result;
         }
 
+        //get the given users twitter page url
         $scope.getTwitter = function(user) {
             if (!user) return;
             var result;
@@ -117,6 +128,7 @@ angular
             results: []
         };
 
+        //store the result of a match
         $scope.storeResult = function(result) {
 
             $scope.user.profile.id = $scope.user.id;
@@ -131,6 +143,7 @@ angular
 
             $scope.currentUser++;
 
+            //persist it to the server if we've processed 20 users
             if ($scope.currentUser == $scope.otherUsers.length) {
                 $http.post('/api/user/store_evaluation', {result: dataToStore});
             }

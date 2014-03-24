@@ -1,5 +1,8 @@
 'use strict';
 
+/**
+ * HTML5 file reader for the CSV to save uploading it to the server first
+ */
 angular.module('fyp.directives').
     directive('fileUpload', [function () {
         return {

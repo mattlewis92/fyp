@@ -1,3 +1,6 @@
+/**
+ * CSV parser
+ */
 angular.module('fyp.services')
     .service('csv', function () {
 

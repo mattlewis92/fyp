@@ -4,6 +4,7 @@ angular
     .module('fyp')
     .config(['$stateProvider', '$locationProvider', function ($stateProvider, $locationProvider) {
 
+        //setup states
         $locationProvider.html5Mode(true);
 
         $stateProvider
@@ -34,16 +35,15 @@ angular
     }])
     .run(['$http', '$angularCacheFactory', function ($http, $angularCacheFactory) {
 
+        //cache options
         var cache = $angularCacheFactory('defaultCache', {
             storageMode: 'localStorage', //store in local storage
             capacity: 10000
         });
 
     }])
-    .config(['$httpProvider', function($httpProvider) {
-        //$httpProvider.interceptors.push('httpThrottler');
-    }])
     .config(['$provide', function ($provide) {
+        //Modified from stackoverflow, same as $q.all() except will resolve even if some promises fail
         $provide.decorator('$q', ['$delegate', function ($delegate) {
             var $q = $delegate;
 

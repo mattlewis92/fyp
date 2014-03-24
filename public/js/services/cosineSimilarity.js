@@ -1,3 +1,6 @@
+/**
+ * Computes cosine similarity of 2 vectors
+ */
 angular.module('fyp.services')
     .service('cosineSimilarity', [function () {
 

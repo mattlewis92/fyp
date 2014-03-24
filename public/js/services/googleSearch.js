@@ -1,6 +1,10 @@
+/**
+ * Service used for googling people and parsing results
+ */
 angular.module('fyp.services')
     .service('googleSearch', ['$http', '$q', '$angularCacheFactory', 'googleSearchApiKey', 'googleSearchId', 'linkedInProfile', 'twitterProfile', function ($http, $q, $angularCacheFactory, googleSearchApiKey, googleSearchId, linkedInProfile, twitterProfile) {
 
+        //Very basic query using the google api
         this.query = function (text) {
 
             var self = this;
@@ -12,7 +16,7 @@ angular.module('fyp.services')
                 });
         }
 
-
+        //extract social profiles from google results
         this.parseResults = function(googleResults) {
 
             if (googleResults.error) throw 'Google search API error: ' + googleResults.error.message;
@@ -48,6 +52,7 @@ angular.module('fyp.services')
             twitterProfileUrls = arrayUnique(twitterProfileUrls);
             linkedInProfileUrls = arrayUnique(linkedInProfileUrls);
 
+            //expand profile urls into full profiles
             var promise1 = twitterProfile
                 .extractFromUrls(twitterProfileUrls)
                 .then(function(profiles) {

@@ -1,3 +1,6 @@
+/**
+ * Simple filter for rounding a float to x decimal places
+ */
 angular
     .module('fyp.filters')
     .filter('round', function() {

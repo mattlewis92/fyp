@@ -25,7 +25,7 @@
         <script src="js/modules.js"></script>
         <script src="js/config.js"></script>
         <script src="js/directives/fileupload.js"></script>
-        <script src="js/directives/ui-bootstrap-select.js"></script>
+        <script src="js/directives/error-box.js"></script>
         <script src="js/services/user.js"></script>
         <script src="js/services/userManager.js"></script>
         <script src="js/services/googleSearch.js"></script>
@@ -36,11 +36,9 @@
         <script src="js/services/linkedInProfile.js"></script>
         <script src="js/services/errorHandler.js"></script>
         <script src="js/services/distance.js"></script>
-        <script src="js/services/httpThrottler.js"></script>
         <script src="js/services/cosineSimilarity.js"></script>
         <script src="js/filters/round.js"></script>
         <script src="js/filters/orderArray.js"></script>
-        <script src="js/controllers/error.js"></script>
         <script src="js/controllers/addUsers.js"></script>
         <script src="js/controllers/lookupUsers.js"></script>
         <script src="js/controllers/viewUsers.js"></script>
@@ -50,12 +48,7 @@
         <script type="text/ng-template" id="container.html">
             <div class="container">
                 <br /><br />
-                <div class="alert alert-danger" ng-show="errors.length > 0" ng-controller="ErrorCtrl">
-                    <button type="button" class="close" ng-click="errors = []">&times;</button>
-                    <ul>
-                        <li ng-repeat="error in errors">{{ error }}</li>
-                    </ul>
-                </div>
+                <error-box></error-box>
                 <ui-view/>
             </div>
         </script>

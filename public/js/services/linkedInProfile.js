@@ -1,3 +1,6 @@
+/**
+ * Service used for converting a linked in profile to a full profile and list of keywords
+ */
 angular.module('fyp.services')
     .service('linkedInProfile', ['$q', '$http', '$angularCacheFactory', 'keywords', function ($q, $http, $angularCacheFactory, keywords) {
 

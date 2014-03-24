@@ -1,5 +1,8 @@
 'use strict';
 
+/**
+ * Controller for allowing the user to input the user details to search
+ */
 angular
     .module('fyp.controllers')
     .controller('AddUsersCtrl', ['$scope', '$state', 'csv', 'userManager', 'user', function ($scope, $state, csv, userManager, user) {
@@ -8,10 +11,12 @@ angular
 
         $scope.userManager = userManager;
 
+        //go to the next state
         $scope.next = function() {
             userManager.lookupAllUsers();
         }
 
+        //If a CSV was added then add it's data to the users to process list
         $scope.$watch('csv', function (newValue) {
 
             if (newValue) {
@@ -41,17 +46,12 @@ angular
             userManager.addUser(new user(profile));
         }
 
+        //Get available groups
         userManager
             .getAvailableGroups()
             .success(function(result) {
                 $scope.groups = result.groups;
             });
 
-        //debug
-        return;
-        $scope.addUser({name: "ooj", surname: "jhutti", email: "ooj@iwaz.at", company: "iwazat"});
-        $scope.addUser({name: "ben", surname: "nimmo", email: "ben@socialsignin.co.uk"});
-        $scope.addUser({name: "Stuart", surname: "ford", email: "stuart@glide.uk.com", company: "Glide"});
-        //$scope.next();
 
     }]);

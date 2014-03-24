@@ -1,4 +1,5 @@
 /**
+ * Computes the distance between 2 given strings
  * Adapted from: https://raw.github.com/NaturalNode/natural/master/lib/natural/distance/jaro-winkler_distance.js
  */
 angular.module('fyp.services')
