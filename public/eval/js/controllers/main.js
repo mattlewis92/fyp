@@ -12,6 +12,11 @@ angular
             .loadInOtherUsers(user)
             .then(function() {
                 $scope.loading = false;
+
+                userManager.users.forEach(function(user) {
+                    user.updateKeywords();
+                });
+
                 userManager.users.sort(function(a, b) {
                     return b.matches.length - a.matches.length;
                 });

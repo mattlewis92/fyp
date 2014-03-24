@@ -24,7 +24,7 @@ angular
 
         this.removeUser = function(user) {
             angular.forEach(self.users, function(otherUser, index) {
-                if (user == otherUser) {
+                if (user.id == otherUser.id) {
                     self.users.splice(index, 1);
                     $http
                         .post('/api/user/delete', {id: user.id})
@@ -60,17 +60,15 @@ angular
 
         this.removeUsersWithNoProfilesFound = function() {
 
-            var originalUsersAmount = self.users.length;
+            var removedCount = 0;
 
-            var newUsers = self.users.filter(function(user) {
+            angular.copy(self.users).forEach(function(user) {
                var hasProfileData = user.hasFoundProfileData();
                if (!hasProfileData) {
-                    self.removeUser(user);
+                   removedCount++;
+                   self.removeUser(user);
                }
-               return hasProfileData;
             });
-
-            var removedCount = originalUsersAmount - newUsers.length;
 
             self.totalUsersLoaded -= removedCount;
 
@@ -114,9 +112,6 @@ angular
                         }
                     });
 
-                    self.users.forEach(function(user) {
-                        user.updateKeywords();
-                    });
                 })
                 .error(errorHandler.handleCriticalError)
                 .finally(function() {

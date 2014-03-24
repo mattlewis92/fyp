@@ -18,7 +18,7 @@ angular
                 profile.isSelected = !profile.isSelected;
                 self.updateKeywords();
                 self.updateOtherFieldsFromSocial();
-                self.persist();
+                return self.persist();
             }
 
             this.updateKeywords = function() {
@@ -174,9 +174,12 @@ angular
                                 });
                             delete self.profile.twitterScreenName; //stop it from being re-searched
                         } else {
-                            self.autoSelectProfiles();
-                            userManager.totalUsersLoaded++;
-                            deferred.resolve(true);
+                            self
+                                .autoSelectProfiles()
+                                .finally(function() {
+                                    userManager.totalUsersLoaded++;
+                                    deferred.resolve(true);
+                                });
                         }
                     })
                     .catch(errorHandler.handleCriticalError);
@@ -213,6 +216,8 @@ angular
 
             this.autoSelectProfiles = function() {
 
+                var promises = [];
+
                 self.linkedinProfiles.forEach(function(profile) {
 
                     var toCompareArr = [
@@ -224,7 +229,9 @@ angular
                         }) : null}
                     ];
 
-                    if (doesProfileMatch(toCompareArr) && !profile.isSelected) self.toggleProfile(profile);
+                    if (doesProfileMatch(toCompareArr) && !profile.isSelected) {
+                        promises.push(self.toggleProfile(profile));
+                    }
 
                 });
 
@@ -234,8 +241,12 @@ angular
                         {given: self.profile.location, found: profile.profile.location}
                     ];
 
-                    if (doesProfileMatch(toCompareArr) && !profile.isSelected) self.toggleProfile(profile);
+                    if (doesProfileMatch(toCompareArr) && !profile.isSelected) {
+                        promises.push(self.toggleProfile(profile));
+                    }
                 });
+
+                return $q.allSettled(promises);
 
             }
 
@@ -276,8 +287,7 @@ angular
                     .then(function(profile) {
                         profile.isSelected = false;
                         self.linkedinProfiles.push(profile);
-                        self.autoSelectProfiles();
-                        self.persist();
+                        return self.autoSelectProfiles();
                     });
             }
 
@@ -287,8 +297,7 @@ angular
                     .then(function(profile) {
                         profile.isSelected = false;
                         self.twitterProfiles.push(profile);
-                        self.autoSelectProfiles();
-                        self.persist();
+                        return self.autoSelectProfiles();
                     });
             }
 

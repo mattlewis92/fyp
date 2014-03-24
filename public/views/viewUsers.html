@@ -121,7 +121,7 @@
             </div>
         </div>
 
-        <div class="well well-sm">
+        <div class="well well-sm hide">
             <h4>Other results</h4>
             <ul>
                 <li ng-repeat="item in userManager.users[currentUserIndex].otherLinks" ng-hide="item.hidden"><a ng-href="{{ item.link }}">{{ item.title }}</a> <a href="javascript:;" ng-click="item.hidden = true" class="text-error"><i class="fa fa-minus-circle text-error"></i></a></li>
@@ -139,7 +139,11 @@
                         {{ match.user.name }}
                     </a>
                     | Score: {{ match.score | round:3 }}
-                    <ul>
+                    <a href="javascript:;" ng-click="showKeywords = !showKeywords">
+                        <i class="fa fa-plus" ng-hide="showKeywords"></i>
+                        <i class="fa fa-minus" ng-show="showKeywords"></i>
+                    </a>
+                    <ul ng-show="showKeywords">
                         <li ng-repeat="keyword in match.intersecting_keywords | orderArray">{{ keyword }}</li>
                     </ul>
                 </li>

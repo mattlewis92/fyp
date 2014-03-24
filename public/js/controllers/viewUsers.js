@@ -2,7 +2,9 @@
 
 angular
     .module('fyp.controllers')
-    .controller('ViewUsersCtrl', ['$scope', 'userManager', 'context', function ($scope, userManager, context) {
+    .controller('ViewUsersCtrl', ['$scope', '$filter', 'userManager', 'context', function ($scope, $filter, userManager, context) {
+
+        userManager.users = $filter('orderBy')(userManager.users, 'profile.surname');
 
         $scope.currentUserIndex = context.currentUserIndex || 0;
 
@@ -16,6 +18,7 @@ angular
 
             angular.forEach($scope.userManager.users, function(user, index) {
                 if (user.id == userId) {
+                    user.updateKeywords(); //update matches when viewing the user
                     $scope.currentUserIndex = index;
                     context.currentUserIndex = index;
                 }
@@ -27,6 +30,11 @@ angular
             $scope.userToSelect = null;
         }
 
-        $scope.usersRemoved = userManager.removeUsersWithNoProfilesFound();
+        if (!context.usersPruned) {
+            $scope.usersRemoved = userManager.removeUsersWithNoProfilesFound();
+            context.usersPruned = true;
+        }
+
+        $scope.switchUser(userManager.users[$scope.currentUserIndex].id);
 
     }]);

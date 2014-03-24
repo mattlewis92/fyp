@@ -86,7 +86,7 @@ class User extends BaseController
             ->hydrate(false)
             ->field('group_name')
             ->equals($this->request()->get('group_name'))
-            ->limit(10)
+            //->limit(10)
             ->getQuery()
             ->execute()
             ->toArray();
