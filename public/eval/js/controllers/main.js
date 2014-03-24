@@ -41,9 +41,13 @@ angular
 
         $scope.currentUser = 0;
 
+        var added = false;
+
         //when a user is selected from the drop down
-        $scope.$watch('userId', function(newValue) {
-            if (newValue) {
+        var watcher = $scope.$watch('userId', function(newValue) {
+            if (newValue && !added) {
+                watcher();
+                added = true;
                 $scope.otherUsers = [];
                 userIds = [];
                 userManager.users.forEach(function(user) {
@@ -65,9 +69,8 @@ angular
                         });
 
                         //now find some other random users that weren't matches
-                        userManager.users = shuffle(userManager.users);
 
-                        userManager.users.forEach(function(user) {
+                        shuffle(angular.copy(userManager.users)).forEach(function(user) {
 
                             if (userIds.indexOf(user.id) == -1 && $scope.otherUsers.length < 20) {
                                 $scope.otherUsers.push({score: 0, user: user});
