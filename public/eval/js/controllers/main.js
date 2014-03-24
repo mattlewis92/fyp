@@ -43,7 +43,9 @@ angular
                         userIds.push(user.id);
                         $scope.user = user;
 
-                        user.matches = shuffle(user.matches);
+                        user.matches.sort(function(a, b) {
+                            return b.score - a.score;
+                        });
 
                         user.matches.forEach(function(match) {
                             if ($scope.otherUsers.length == 10) {
