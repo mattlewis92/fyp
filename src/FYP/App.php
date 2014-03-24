@@ -81,6 +81,7 @@ class App extends Slim {
             '/api/user/get_group_names'         => 'User:getGroupNames',
             '/api/user/find_by_group_name'      => 'User:findByGroupName',
             '/api/user/delete'                  => 'User:delete',
+            '/api/user/store_evaluation'                  => 'User:storeEvaluation',
             '/api/user/save'                    => 'User:save',
             '.+'                                => 'Index:index'
         ));

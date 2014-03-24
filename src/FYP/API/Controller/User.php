@@ -86,6 +86,7 @@ class User extends BaseController
             ->hydrate(false)
             ->field('group_name')
             ->equals($this->request()->get('group_name'))
+            ->limit(10)
             ->getQuery()
             ->execute()
             ->toArray();
@@ -118,6 +119,21 @@ class User extends BaseController
             ->execute();
 
         $this->sendResponse(array('groups' => $groups->toArray()));
+    }
+
+    public function storeEvaluationAction() {
+
+        $data = $this->request()->post('result');
+
+        $result = new \FYP\Database\Documents\EvaluationResult();
+        $result->setUser(array($data['user']))->setResult($data['results']);
+
+        $dm = \FYP\APP::getDI()['doctrineManager'];
+        $dm->persist($result);
+        $dm->flush();
+
+        $this->sendResponse(array('success' => true));
+
     }
 
 } 
