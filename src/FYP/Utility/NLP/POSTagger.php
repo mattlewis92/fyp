@@ -4,7 +4,13 @@ namespace FYP\Utility\NLP;
 
 use \FYP\Database\Documents\Lexicon;
 
-
+/**
+ * Pass in an array of tokens to tag
+ * Translated and adapted from: https://www.npmjs.org/package/pos
+ *
+ * Class POSTagger
+ * @package FYP\Utility\NLP
+ */
 class POSTagger {
 
     const DEFAULT_TAG = 'NN';
@@ -15,6 +21,12 @@ class POSTagger {
         $this->dm = \FYP\APP::getDI()['doctrineManager'];
     }
 
+    /**
+     * Tag a given list of words with the POS that they are
+     *
+     * @param array $words
+     * @return array
+     */
     public function tag(array $words) {
 
         $tagged = array();
@@ -89,6 +101,12 @@ class POSTagger {
         return $tagged;
     }
 
+    /**
+     * Lookup the word in the lexicon
+     *
+     * @param $word
+     * @return string
+     */
     private function lookup($word) {
 
         $query = $this->dm->getRepository('\FYP\Database\Documents\Lexicon');
@@ -105,11 +123,25 @@ class POSTagger {
 
     }
 
+    /**
+     * Does a string start with another string
+     *
+     * @param $string
+     * @param $substring
+     * @return bool
+     */
     public function startsWith($string, $substring) {
         if (empty($string) || empty($substring)) return false;
         return strpos($string, $substring) === 0;
     }
 
+    /**
+     * Does a string end with another string
+     *
+     * @param $string
+     * @param $substring
+     * @return bool
+     */
     public function endsWith($string, $substring) {
         if (empty($string) || empty($substring) || strlen($substring) > strlen($string)) return false;
 

@@ -6,9 +6,17 @@ use \Doctrine\DBAL\Configuration as DoctrineConfig;
 use \Doctrine\DBAL\DriverManager as DoctrineDriverManager;
 use \FYP\Utility\BaseWorker;
 
-
+/**
+ * Import the moby database of synonyms and plot them in a graph database
+ *
+ * Class ImportMoby
+ * @package FYP\Worker
+ */
 class ImportMoby extends BaseWorker {
 
+    /**
+     * Setup the worker
+     */
     protected function configure() {
         $this
             ->setName('import:moby')
@@ -22,6 +30,12 @@ class ImportMoby extends BaseWorker {
         $this->neo4j = \FYP\APP::getDI()['neo4j'];
     }
 
+    /**
+     * Do the job
+     *
+     * @param array $data
+     * @return mixed|string
+     */
     protected function doJob(array $data = array()) {
 
         $dm = $this->getHelperSet()->get('dm')->getDocumentManager();
@@ -70,6 +84,7 @@ class ImportMoby extends BaseWorker {
 
     }
 
+    //Lookup the word in mongo and add it if it doesnt aready exist
     private function getWord($lemma) {
 
         $dm = $this->getHelperSet()->get('dm')->getDocumentManager();
@@ -103,6 +118,12 @@ class ImportMoby extends BaseWorker {
 
     }
 
+    /**
+     * Get all synonyms of a given word id
+     *
+     * @param $wordId
+     * @return array
+     */
     private function getSynonymWords($wordId) {
 
         $words = $this->mysql

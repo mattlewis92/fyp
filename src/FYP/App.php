@@ -8,10 +8,19 @@ use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\Mapping\Driver\AnnotationDriver;
 use SlimController\Slim;
 
+/**
+ * Main app class
+ *
+ * Class App
+ * @package FYP
+ */
 class App extends Slim {
 
     private static $di = null;
 
+    /**
+     * Setup the app
+     */
     public function __construct() {
 
         //hydrate post data with the json string that angular sends.
@@ -30,6 +39,11 @@ class App extends Slim {
         ));
     }
 
+    /**
+     * Get the dependency injection class so that we can access instances of classes globally
+     *
+     * @return null
+     */
     public static function getDI() {
         if (empty(self::$di)) {
             self::setupDependencyInjection();
@@ -37,6 +51,9 @@ class App extends Slim {
         return self::$di;
     }
 
+    /**
+     * Setup the dependency injection instance
+     */
     private static function setupDependencyInjection() {
         $di = new \Pimple();
 
@@ -70,6 +87,9 @@ class App extends Slim {
         self::$di = $di;
     }
 
+    /**
+     * Setup the routes
+     */
     public function initRoutes() {
 
         $this->addRoutes(array(
@@ -88,6 +108,9 @@ class App extends Slim {
 
     }
 
+    /**
+     * Run the app
+     */
     public function run() {
         $this->initRoutes();
         return parent::run();

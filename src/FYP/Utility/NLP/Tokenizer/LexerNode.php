@@ -2,13 +2,25 @@
 
 namespace FYP\Utility\NLP\Tokenizer;
 
-
+/**
+ * Does most of the work for the tokenizing strings, used like this for recusion
+ *
+ * Class LexerNode
+ * @package FYP\Utility\NLP\Tokenizer
+ */
 class LexerNode {
 
     private $string;
     private $children = array();
     private $matches = array();
 
+    /**
+     * Pass in the string, the first regex to try and the rest of the regexes
+     *
+     * @param $string
+     * @param $regex
+     * @param $regexes
+     */
     public function __construct($string, $regex, $regexes) {
 
         $this->string = $string;
@@ -37,6 +49,12 @@ class LexerNode {
 
     }
 
+    /**
+     * Fill array
+     *
+     * @param $array
+     * @return array
+     */
     public function fillArray($array) {
 
         foreach($this->children as $index => $child) {
@@ -59,6 +77,12 @@ class LexerNode {
         return $array;
     }
 
+    /**
+     * Is a string not blank i.e. contains characters that aren't whitespace
+     *
+     * @param $string
+     * @return bool
+     */
     private function isNotBlank($string) {
         return preg_match("/\S/", $string) > 0;
     }

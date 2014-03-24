@@ -2,11 +2,19 @@
 
 namespace FYP;
 
-
+/**
+ * Config class
+ *
+ * Class Config
+ * @package FYP
+ */
 class Config {
 
     private $config = array();
 
+    /**
+     * Setup some common config variables
+     */
     public function __construct() {
         $this->config['rootDir'] = __DIR__ . '/../../';
         $this->config['publicDir'] = $this->config['rootDir'] . 'public/';
@@ -37,6 +45,13 @@ class Config {
         }
     }
 
+    /**
+     * Get a config value
+     *
+     * @param $key
+     * @return mixed
+     * @throws \Exception
+     */
     public function get($key) {
         if (empty($this->config[$key])) throw new \Exception('This config value doesn\'t exist!');
         return $this->config[$key];

@@ -5,6 +5,13 @@ namespace FYP\Utility\NLP;
 use FYP\Utility\NLP\Tokenizer\Lexer;
 use Doctrine\Common\Inflector\Inflector;
 
+/**
+ * Used to extract keywords from a block of text
+ * Original idea came from: https://github.com/harthur/glossary but has since been adapted heavily
+ *
+ * Class KeywordExtractor
+ * @package FYP\Utility\NLP
+ */
 class KeywordExtractor {
 
     private $lexer;
@@ -17,12 +24,21 @@ class KeywordExtractor {
         $this->tagger = new POSTagger();
     }
 
+    /**
+     * Function which does the extraction
+     *
+     * @param $string
+     * @return array
+     */
     public function extract($string) {
 
         //Clean string of weird characters
         $string = preg_replace('/[^(\x20-\x7F)]*/','', $string);
 
+        //Tokenize the string
         $tokens = $this->lexer->lex($string);
+
+        //Tag the string
         $tagged = $this->tagger->tag($tokens);
 
         $concatWithPrevious = false;
@@ -35,15 +51,18 @@ class KeywordExtractor {
             $isNoun = $this->tagger->startsWith($item['tag'], 'N');
             $isAdjective = $item['tag'] == 'JJ';
 
+            //If it's a noun or an adjective that starts with a capital letter
             if (!$concatWithPrevious && ($isNoun || ($isAdjective && preg_match("/[A-Z]/", substr($item['word'], 0, 1)) > 0))) {
 
                 $concatWithPrevious = true;
                 $buildFullNoun[] = $item['word'];
 
+            //If previous was a noun or adjective that starts with a capital letter and this word is a noun or the word and then concat it
             } elseif ($concatWithPrevious && ($isNoun || strtolower($item['word']) == 'and')) {
 
                 $buildFullNoun[] = $item['word'];
 
+            //If it's a noun then concat it with the previous string that's being built (if any)
             } else if ($concatWithPrevious && !$isNoun) {
 
                 $concatWithPrevious = false;
@@ -68,6 +87,12 @@ class KeywordExtractor {
         return $this->postProcess($result);
     }
 
+    /**
+     * After all keywords have been extracted, post process them.
+     *
+     * @param $phrases
+     * @return array
+     */
     private function postProcess($phrases) {
 
         $result = array();
@@ -91,6 +116,13 @@ class KeywordExtractor {
 
     }
 
+    /**
+     * Join the words together into a phrase and add to the count
+     *
+     * @param $result
+     * @param $words
+     * @return mixed
+     */
     private function buildFullPhraseAndAddToResult($result, $words) {
         $fullPhrase = $this->transformPhrase(implode(' ', $words));
 
@@ -105,6 +137,12 @@ class KeywordExtractor {
         return $result;
     }
 
+    /**
+     * Transform the phrase
+     *
+     * @param $phrase
+     * @return string
+     */
     private function transformPhrase($phrase) {
         $phrase = trim($phrase); //trim it
 
@@ -115,6 +153,12 @@ class KeywordExtractor {
         return $phrase;
     }
 
+    /**
+     * Check if the phrase is ok to keep
+     *
+     * @param $phrase
+     * @return bool
+     */
     private function isPhraseAllowed($phrase) {
         if (strlen($phrase) == 1) return false; //remove stuff like I.
 

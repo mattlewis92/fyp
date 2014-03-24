@@ -4,10 +4,23 @@ namespace FYP\Utility\NLP;
 
 use FYP\App;
 
+/**
+ * Used for handling synonyms
+ *
+ * Class Synonym
+ * @package FYP\Utility\NLP
+ */
 class Synonym {
 
     const MAX_DEPTH = 3;
 
+    /**
+     * Get a similarity score between users of how similar they are
+     *
+     * @param $lemma1
+     * @param $lemma2
+     * @return float
+     */
     public function getSimilarityScore($lemma1, $lemma2) {
         $neo4j = App::getDI()['neo4j'];
 
@@ -40,6 +53,13 @@ class Synonym {
 
     }
 
+    /**
+     * Tell if 2 words are similar
+     *
+     * @param $lemma1
+     * @param $lemma2
+     * @return bool
+     */
     public function areSynonyms($lemma1, $lemma2) {
         $neo4j = App::getDI()['neo4j'];
 
@@ -63,6 +83,12 @@ class Synonym {
 
     }
 
+    /**
+     * Get a word from the database
+     *
+     * @param $lemma
+     * @return mixed
+     */
     private function getWord($lemma) {
         return App::getDI()['doctrineManager']
             ->getRepository('\FYP\Database\Documents\Word')

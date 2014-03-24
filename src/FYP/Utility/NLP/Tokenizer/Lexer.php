@@ -17,6 +17,12 @@ class Lexer {
         "/[\/\.\,\?\!\"\']/i"
     );
 
+    /**
+     * Splits up a string into tokens
+     *
+     * @param $string
+     * @return array
+     */
     public function lex($string) {
 
         $firstRegex = $this->regexes[0];
