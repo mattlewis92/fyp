@@ -1,6 +1,6 @@
 angular
     .module('fyp.services')
-    .service('user', ['$http', '$q', '$angularCacheFactory', 'googleSearch', 'keywords', 'userManager', 'errorHandler', 'distance', 'linkedInProfile', 'twitterProfile', function ($http, $q, $angularCacheFactory, googleSearch, keywords, userManager, errorHandler, distance, linkedInProfile, twitterProfile) {
+    .service('user', ['$http', '$q', '$angularCacheFactory', 'googleSearch', 'keywords', 'userManager', 'errorHandler', 'distance', 'cosineSimilarity', 'linkedInProfile', 'twitterProfile', function ($http, $q, $angularCacheFactory, googleSearch, keywords, userManager, errorHandler, distance, cosineSimilarity, linkedInProfile, twitterProfile) {
 
         return function(profile) {
 
@@ -89,23 +89,10 @@ angular
                     vector2.push(user2TermFrequencyNormalized * documentInfrequency);
                 });
 
-                var absVector = function(vector) {
-                    return Math.sqrt(vector.reduce(function(previousValue, currentValue) {
-                        return previousValue + (currentValue * currentValue);
-                    }, 0));
-                }
-
-                var dotProduct = function(vector1, vector2) {
-                    return vector1.reduce(function(previousValue, currentValue, index) {
-                        return previousValue + (currentValue * vector2[index]);
-                    }, 0);
-                }
-
-                var score = dotProduct(vector1, vector2) / (absVector(vector1) * absVector(vector2));
+                var score = cosineSimilarity(vector1, vector2);
                 if (score) {
                     var match = {score: score, user: {id: otherUser.id, name: otherUser.profile.name + ' ' + otherUser.profile.surname}, intersecting_keywords: intersectingKeywords};
                     self.matches.push(match);
-
                 }
             }
 
