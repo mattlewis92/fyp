@@ -1,3 +1,6 @@
+/**
+ * User manager for managing all users in the system
+ */
 angular
     .module('fyp.services')
     .service('userManager', ['$http', '$q', '$state', 'errorHandler', function ($http, $q, $state, errorHandler) {
@@ -8,9 +11,12 @@ angular
 
         this.totalUsersLoaded = 0;
 
+        //The current group set that all users found will be added to
         this.currentGroup = '';
 
+        //Add a new user
         this.addUser = function(user) {
+            //check they've not already been found
             var found = false;
             self.users.forEach(function(user2) {
                 if (user.id && user.id == user2.id) found = true;
@@ -22,17 +28,19 @@ angular
             return false;
         }
 
+        //remove a user
         this.removeUser = function(user) {
             angular.forEach(self.users, function(otherUser, index) {
                 if (user.id == otherUser.id) {
                     self.users.splice(index, 1);
                     $http
-                        .post('/api/user/delete', {id: user.id})
+                        .post('/api/user/delete', {id: user.id}) //persist this change to the database
                         .error(errorHandler.handleError);
                 }
             });
         }
 
+        //Lookup all users in batches of 5 to prevent tonnes of http requests going out filling up memory
         this.lookupAllUsers = function() {
             self.totalUsersLoaded = 0;
             $state.go('app.lookupUsers');
@@ -52,12 +60,14 @@ angular
 
         }
 
+        //Lookup a single user
         this.lookupUser = function(user) {
             self.totalUsersLoaded--;
             $state.go('app.lookupUsers');
             user.lookup();
         }
 
+        //Remove all users with no profile data found
         this.removeUsersWithNoProfilesFound = function() {
 
             var removedCount = 0;
@@ -76,10 +86,12 @@ angular
 
         }
 
+        //Get all available groups
         this.getAvailableGroups = function() {
             return $http.get('/api/user/get_group_names');
         }
 
+        //Any users that have been processed in the past, then load them in now
         this.loadInOtherUsers = function(userService) {
 
             var deferred = $q.defer();
@@ -95,6 +107,7 @@ angular
                 .success(function(users) {
 
                     angular.forEach(users, function(user, id) {
+                        //build the user object and add it
                         var profile = {
                             name: user.name,
                             surname: user.surname,

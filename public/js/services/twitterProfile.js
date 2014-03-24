@@ -1,8 +1,12 @@
+/**
+ * Service used for converting a twitter profile to a full profile and list of keywords
+ */
 angular.module('fyp.services')
     .service('twitterProfile', ['$q', '$http', '$angularCacheFactory', 'keywords', function ($q, $http, $angularCacheFactory, keywords) {
 
         var self = this;
 
+        //Grab a profile and a list of keywords
         this.extractFromUrl = function(profileUrl) {
 
             var deferred = $q.defer();
@@ -47,6 +51,7 @@ angular.module('fyp.services')
 
         }
 
+        //Helper function to batch grab a load of urls
         this.extractFromUrls = function(urls) {
             var requests = [];
             urls.forEach(function(url) {

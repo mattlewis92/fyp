@@ -1,3 +1,6 @@
+/**
+ * User model
+ */
 angular
     .module('fyp.services')
     .service('user', ['$http', '$q', '$angularCacheFactory', 'googleSearch', 'keywords', 'userManager', 'errorHandler', 'distance', 'cosineSimilarity', 'linkedInProfile', 'twitterProfile', function ($http, $q, $angularCacheFactory, googleSearch, keywords, userManager, errorHandler, distance, cosineSimilarity, linkedInProfile, twitterProfile) {
@@ -14,6 +17,7 @@ angular
             this.otherLinks = [];
             this.matches = [];
 
+            //Toggle select a social media profile
             this.toggleProfile = function(profile) {
                 profile.isSelected = !profile.isSelected;
                 self.updateKeywords();
@@ -21,6 +25,7 @@ angular
                 return self.persist();
             }
 
+            //Update a users keyword cloud and subsequantly they're matches
             this.updateKeywords = function() {
 
                 self.keywords = {};
@@ -40,6 +45,7 @@ angular
 
             }
 
+            //Function that finds matches between users using TF:IDF and cosine similarity
             this.findSimilarityScoreBetweenUsers = function(otherUser) {
 
                 angular.forEach(self.matches, function(match, index) {
@@ -52,6 +58,7 @@ angular
                 var vector1 = [];
                 var vector2 = [];
 
+                //calculate the total documents for a given list of keywords
                 var calculateDocumentLength = function(keywords) {
                     var documentLength = 0;
                     angular.forEach(keywords, function(count) {
@@ -60,10 +67,12 @@ angular
                     return documentLength;
                 }
 
+                //pre-calculate it here for performance
                 var user1DocumentLength = calculateDocumentLength(thisUsersKeywords);
                 var user2DocumentLength = calculateDocumentLength(otherUsersKeywords);
                 var totalDocumentCount = userManager.users.length;
 
+                //Find the total number of documents with this term
                 var totalDocumentsWithTerm = function(term) {
                     return userManager.users.reduce(function(acc, user) {
                         return acc + (user.keywords[term] ? 1 : 0);
@@ -80,6 +89,7 @@ angular
                         intersectingKeywords.push(word);
                     }
 
+                    //normalize the term frequency into a value between 0 and 1
                     var user1TermFrequencyNormalized = thisUserCount / user1DocumentLength;
                     var user2TermFrequencyNormalized = otherUserWordCount / user2DocumentLength;
 
@@ -89,6 +99,7 @@ angular
                     vector2.push(user2TermFrequencyNormalized * documentInfrequency);
                 });
 
+                //Compute the cosine similarity between the 2 vectors
                 var score = cosineSimilarity(vector1, vector2);
                 if (score) {
                     var match = {score: score, user: {id: otherUser.id, name: otherUser.profile.name + ' ' + otherUser.profile.surname}, intersecting_keywords: intersectingKeywords};
@@ -96,6 +107,7 @@ angular
                 }
             }
 
+            //If we've found location, company etc from the users social media account then update their profile
             this.updateOtherFieldsFromSocial = function() {
                 self.linkedinProfiles.concat(self.twitterProfiles).forEach(function(profile) {
                     if (profile.isSelected && angular.isDefined(profile.profile.location.name) && (!angular.isDefined(self.profile.location) || self.profile.location.length == 0)) {
@@ -104,6 +116,7 @@ angular
                 });
             }
 
+            //Save a user to mongodb
             this.persist = function() {
 
                var dataToSend = {
@@ -128,10 +141,12 @@ angular
 
             }
 
+            //This actually does the searching for a user
             this.lookup = function() {
 
                 var deferred = $q.defer();
 
+                //build the search string
                 var searchText = self.profile.name + ' ' + self.profile.surname;
 
                 angular.forEach(['company', 'location'], function (field) {
@@ -143,6 +158,7 @@ angular
                 googleSearch
                     .query(searchText)
                     .then(function (result) {
+
                         self.twitterProfiles = result.twitterProfiles;
                         self.linkedinProfiles = result.linkedInProfiles;
                         self.otherLinks = result.otherLinks;
@@ -151,6 +167,8 @@ angular
 
                     })
                     .then(function() {
+
+                        //If we got passed a twitter handle in the CSV then add it to the profile
                         if (self.profile.twitterScreenName) {
                             self.twitterProfiles = [];
                             self
@@ -161,6 +179,7 @@ angular
                                 });
                             delete self.profile.twitterScreenName; //stop it from being re-searched
                         } else {
+                            //otherwise auto select profiles and mark this user as loaded
                             self
                                 .autoSelectProfiles()
                                 .finally(function() {
@@ -175,13 +194,14 @@ angular
 
             }
 
+            //Compare a set of passed in fields using jaro winkler string distance to make a guess at if this is the correct user
             var doesProfileMatch = function(toCompareArr) {
                 var matchingScores = [];
 
                 toCompareArr.forEach(function(toCompare) {
                     if (toCompare.given && toCompare.found) {
 
-                        if (typeof toCompare.found == 'object') {
+                        if (typeof toCompare.found == 'object') { //if an array of fields just look for one match and keep the highest
                             var highestScore = 0;
                             toCompare.found.forEach(function(item) {
                                 var jwd = distance.jaroWinker(toCompare.given, item);
@@ -189,11 +209,13 @@ angular
                             });
                             matchingScores.push(highestScore);
                         } else {
+                            //else just add the score to the count
                             matchingScores.push(distance.jaroWinker(toCompare.given, toCompare.found));
                         }
                     }
                 });
 
+                //if all scores are > 0.75 then this is said to be the correct profile found
                 var isProfile = matchingScores.length > 0 && matchingScores.filter(function(score) {
                     return score >= 0.75;
                 }).length == matchingScores.length;
@@ -201,10 +223,12 @@ angular
                 return isProfile;
             }
 
+            //make a best guess to auto select profiles using string distance
             this.autoSelectProfiles = function() {
 
                 var promises = [];
 
+                //Auto select linkedin profiles
                 self.linkedinProfiles.forEach(function(profile) {
 
                     var toCompareArr = [
@@ -222,6 +246,7 @@ angular
 
                 });
 
+                //auto select twitter profiles
                 self.twitterProfiles.forEach(function(profile) {
                     var toCompareArr = [
                         {given: self.profile.name + ' ' + self.profile.surname, found: profile.profile.name},
@@ -237,14 +262,17 @@ angular
 
             }
 
+            //Used for telling if any useful info was actually found for a user
             this.hasFoundProfileData = function() {
 
+                //if no linkedin and no twitter profiles then say no
                 if (self.linkedinProfiles.length == 0 && self.twitterProfiles.length == 0) {
                     return false;
                 }
 
                 var result = false;
 
+                //check for potential matches of users just based on name and not other fields
                 self.linkedinProfiles.forEach(function(profile) {
 
                     var toCompareArr = [
@@ -268,6 +296,7 @@ angular
 
             }
 
+            //manually add a linkedin profile
             this.addManualLinkedInProfile = function(profileUrl) {
                 return linkedInProfile
                     .extractFromUrl(profileUrl)
@@ -278,6 +307,7 @@ angular
                     });
             }
 
+            //manually add a twitter profiel
             this.addManualTwitterProfile = function(profileUrl) {
                 return twitterProfile
                     .extractFromUrl(profileUrl)

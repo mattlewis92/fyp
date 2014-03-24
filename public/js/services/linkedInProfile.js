@@ -6,6 +6,7 @@ angular.module('fyp.services')
 
         var self = this;
 
+        //Given a linkedin profile url, grab the profile and extract keywords
         this.extractFromUrl = function(url) {
             var deferred = $q.defer();
 
@@ -13,6 +14,7 @@ angular.module('fyp.services')
                 .get('/api/social/linkedin?profile_url=' + url, {cache: $angularCacheFactory.get('defaultCache')})
                 .success(function (profile) {
 
+                    //handle private profiles
                     if (profile.firstName == 'private') {
                         deferred.reject('Profile is private');
                         return;
@@ -29,6 +31,7 @@ angular.module('fyp.services')
                         });
                     }
 
+                    //extract keywords
                     keywords
                         .extract(text)
                         .then(function (result) {
@@ -44,6 +47,7 @@ angular.module('fyp.services')
             return deferred.promise;
         }
 
+        //Helper function to handle an array of urls
         this.extractFromUrls = function(urls) {
             var requests = [];
             urls.forEach(function(url) {
