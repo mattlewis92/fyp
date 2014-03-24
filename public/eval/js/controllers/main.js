@@ -38,6 +38,8 @@ angular
 
         $scope.$watch('userId', function(newValue) {
             if (newValue) {
+                $scope.otherUsers = [];
+                userIds = [];
                 userManager.users.forEach(function(user) {
                     if (user.id == newValue) {
                         userIds.push(user.id);
