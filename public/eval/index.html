@@ -29,7 +29,7 @@
             Select a user:
             <select ng-model="userId">
                 <option value="">Please select your name from the list</option>
-                <option ng-repeat="user in userManager.users" value="{{ user.id }}">{{ user.profile.name + ' ' + user.profile.surname + ' (' + user.matches.length + ' matches)' }}</option>
+                <option ng-repeat="user in userManager.users" value="{{ user.id }}">{{ user.profile.name + ' ' + user.profile.surname }}</option>
             </select>
         </div>
 

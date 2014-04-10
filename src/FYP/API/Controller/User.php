@@ -121,6 +121,9 @@ class User extends BaseController
         $this->sendResponse(array('groups' => $groups->toArray()));
     }
 
+    /**
+     * Method for storing evaluation results
+     */
     public function storeEvaluationAction() {
 
         $data = $this->request()->post('result');

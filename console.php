@@ -5,8 +5,9 @@ require 'vendor/autoload.php';
 $doctrineManager = \FYP\App::getDI()['doctrineManager'];
 
 $helpers = array(
-    'dm' => new Doctrine\ODM\MongoDB\Tools\Console\Helper\DocumentManagerHelper($doctrineManager),
-    'progress' => new Symfony\Component\Console\Helper\ProgressHelper()
+    'dm'        => new Doctrine\ODM\MongoDB\Tools\Console\Helper\DocumentManagerHelper($doctrineManager),
+    'progress'  => new Symfony\Component\Console\Helper\ProgressHelper(),
+    'table'     => new Symfony\Component\Console\Helper\TableHelper()
 );
 
 $helperSet = isset($helperSet) ? $helperSet : new \Symfony\Component\Console\Helper\HelperSet();

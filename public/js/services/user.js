@@ -215,9 +215,9 @@ angular
                     }
                 });
 
-                //if all scores are > 0.75 then this is said to be the correct profile found
+                //if all scores are > 0.8 then this is said to be the correct profile found
                 var isProfile = matchingScores.length > 0 && matchingScores.filter(function(score) {
-                    return score >= 0.75;
+                    return score >= 0.8;
                 }).length == matchingScores.length;
 
                 return isProfile;

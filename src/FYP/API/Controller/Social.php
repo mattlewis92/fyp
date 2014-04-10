@@ -24,7 +24,7 @@ class Social extends BaseController {
             $result = array(
                 'user' => $user,
                 'peerindex' => $tweets,
-                //'latest_tweets' => $lsatestTweets
+                //'latest_tweets' => $latestTweets
             );
 
         } catch (\Exception $e) {
